@@ -2,12 +2,12 @@
 C:\vcpkg\installed\x64-windows\include\raygui.h(2654,46): warning C4267: =: Převod z: size_t na: int, může dojít ke ztrátě dat.
   (kompilování zdrojového souboru main.cpp)
   
-C:\Users\simon\source\repos\render\render\main.cpp(634,41): warning C4244: argument: float se převádí na int; může dojít ke ztrátě dat.
-C:\Users\simon\source\repos\render\render\main.cpp(634,32): warning C4244: argument: float se převádí na int; může dojít ke ztrátě dat.
-C:\Users\simon\source\repos\render\render\main.cpp(641,61): warning C4244: argument: float se převádí na int; může dojít ke ztrátě dat.
-C:\Users\simon\source\repos\render\render\main.cpp(641,52): warning C4244: argument: float se převádí na int; může dojít ke ztrátě dat.
-C:\Users\simon\source\repos\render\render\main.cpp(648,61): warning C4244: argument: float se převádí na int; může dojít ke ztrátě dat.
-C:\Users\simon\source\repos\render\render\main.cpp(648,52): warning C4244: argument: float se převádí na int; může dojít ke ztrátě dat.
+C:\Users\simon\source\repos\render\render\main.cpp(954,41): warning C4244: argument: float se převádí na int; může dojít ke ztrátě dat.
+C:\Users\simon\source\repos\render\render\main.cpp(954,32): warning C4244: argument: float se převádí na int; může dojít ke ztrátě dat.
+C:\Users\simon\source\repos\render\render\main.cpp(961,61): warning C4244: argument: float se převádí na int; může dojít ke ztrátě dat.
+C:\Users\simon\source\repos\render\render\main.cpp(961,52): warning C4244: argument: float se převádí na int; může dojít ke ztrátě dat.
+C:\Users\simon\source\repos\render\render\main.cpp(968,61): warning C4244: argument: float se převádí na int; může dojít ke ztrátě dat.
+C:\Users\simon\source\repos\render\render\main.cpp(968,52): warning C4244: argument: float se převádí na int; může dojít ke ztrátě dat.
   render.vcxproj -> C:\Users\simon\source\repos\render\x64\Debug\render.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
