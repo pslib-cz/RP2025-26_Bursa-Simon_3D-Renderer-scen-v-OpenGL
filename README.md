@@ -23,7 +23,7 @@ Jednoduchý tile-based editor map s 2D editorem a 3D náhledem, napsaný v C++ p
 | Undo / Redo | Ctrl+Z / Ctrl+Y |
 | Kopírovat / Vložit | Ctrl+C / Ctrl+V |
 | Rotace výběru | R |
-| Zrcadlení X / Y | Ctrl+← / Ctrl+↑ |
+| Zrcadlení X / Y | Ctrl+← / Ctrl+→ |
 | Smazat výběr | Delete |
 
 ## Ukládání
