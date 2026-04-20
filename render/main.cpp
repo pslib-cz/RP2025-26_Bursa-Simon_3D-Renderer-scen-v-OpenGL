@@ -658,7 +658,7 @@ int main() {
                     }
                 }
 
-                if (ctrl && IsKeyPressed(KEY_UP) && toolMode == TOOL_SELECT && sel.count > 0) {
+                if (ctrl && IsKeyPressed(KEY_RIGHT) && toolMode == TOOL_SELECT && sel.count > 0) {
                     CopySelection(&clipboard, &sel, &map);
                     MirrorClipboardY(&clipboard);
                     PasteClipboard(&clipboard, &map, &selGrid, &sel, sel.srcX[0] - map.offsetX, sel.srcY[0] - map.offsetY - clipboard.boundsH + 1);
@@ -881,7 +881,6 @@ int main() {
                 Vector2 cam3dXZ = { camera3D.position.x * CELL_BASE_SIZE + map.offsetX * CELL_BASE_SIZE,
                                     camera3D.position.z * CELL_BASE_SIZE + map.offsetY * CELL_BASE_SIZE };
                 Vector2 indicatorScreen = GetWorldToScreen2D(cam3dXZ, camera2D);
-                // clamp to visible area
                 float ix = Clamp(indicatorScreen.x, 160, (float)sw - 10);
                 float iy = Clamp(indicatorScreen.y, 50, (float)sh - 60);
                 DrawCircle((int)ix, (int)iy, 7, { 255, 100, 0, 220 });
@@ -1006,13 +1005,6 @@ int main() {
 
                 DrawRectangle(76, panelTop + 182, 40, 50, brushColor);
                 DrawRectangleLinesEx({ 76, (float)(panelTop + 182), 40, 50 }, 1, LIGHTGRAY);
-
-                // mirror buttons
-                //DrawText("Mirror:", 8, panelTop + 240, 9, GRAY);
-                //GuiSetState(mirrorMode == MIRROR_X ? STATE_PRESSED : STATE_NORMAL); if (GuiButton({ 8, (float)(panelTop + 252), 44, 18 }, "X"))    mirrorMode = (mirrorMode == MIRROR_X) ? MIRROR_NONE : MIRROR_X;
-                //GuiSetState(mirrorMode == MIRROR_Y ? STATE_PRESSED : STATE_NORMAL); if (GuiButton({ 56, (float)(panelTop + 252), 44, 18 }, "Y"))   mirrorMode = (mirrorMode == MIRROR_Y) ? MIRROR_NONE : MIRROR_Y;
-                //GuiSetState(mirrorMode == MIRROR_BOTH ? STATE_PRESSED : STATE_NORMAL); if (GuiButton({ 104, (float)(panelTop + 252), 44, 18 }, "XY")) mirrorMode = (mirrorMode == MIRROR_BOTH) ? MIRROR_NONE : MIRROR_BOTH;
-                //GuiSetState(STATE_NORMAL);
 
                 DrawText(TextFormat("Pos: %d, %d", logicX, logicY), 8, panelTop + 278, 9, { 120,140,180,255 });
             }
