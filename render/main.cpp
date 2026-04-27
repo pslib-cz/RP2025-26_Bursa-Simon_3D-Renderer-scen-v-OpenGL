@@ -16,17 +16,20 @@ typedef enum { MIRROR_NONE = 0, MIRROR_X, MIRROR_Y, MIRROR_BOTH } MirrorMode;
 #define MAX_UNZOOM 0.15f
 #define MAX_ZOOM   3.0f
 #define UNDO_MAX   64
+
 typedef struct {
     float    height;
     Color    color;
     CellType type;
     bool     solid;
 } Cell;
+
 typedef struct {
     Cell** data;
     int    width, height;
     int    offsetX, offsetY;
 } DynamicMap;
+
 typedef struct {
     bool    active;
     Vector2 worldPosition;
@@ -34,6 +37,7 @@ typedef struct {
     int     targetX, targetY;
     int     editMode;
 } ContextMenu;
+
 typedef struct {
     Cell* cells;
     int* srcX;
@@ -45,126 +49,259 @@ typedef struct {
     Vector2 moveStartWorld;
     int     moveDeltaX, moveDeltaY;
 } SelectionState;
+
 typedef struct {
     bool** data;
     int    width, height;
 } SelectionGrid;
+
 typedef struct {
     Cell* cells;
     int* relX, * relY;
     int   count, boundsW, boundsH;
 } Clipboard;
+
 typedef struct {
     Cell** data;
     int    width, height, offsetX, offsetY;
 } MapSnapshot;
+
 typedef struct {
     MapSnapshot snapshots[UNDO_MAX];
     int         count, current;
 } UndoStack;
-typedef struct { char text[128]; float timer; Color color; } StatusMsg;
+
+typedef struct { 
+    char text[128]; 
+    float timer;    
+    Color color; 
+} StatusMsg;
+
 #define MAP_MAGIC   "MAP\0"
 #define MAP_VERSION 1
 MapSnapshot SnapshotMap(const DynamicMap* m) {
-    MapSnapshot s;
-    s.width = m->width; s.height = m->height;
-    s.offsetX = m->offsetX; s.offsetY = m->offsetY;
+    MapSnapshot s = { 0 }; 
+    if (!m || !m->data) return s;
+
+    s.width = m->width;
+    s.height = m->height;
+    s.offsetX = m->offsetX;
+    s.offsetY = m->offsetY;
+
     s.data = (Cell**)malloc(m->width * sizeof(Cell*));
+    if (!s.data) return s;
+
     for (int x = 0; x < m->width; x++) {
         s.data[x] = (Cell*)malloc(m->height * sizeof(Cell));
-        memcpy(s.data[x], m->data[x], m->height * sizeof(Cell));
+        if (s.data[x]) {
+            memcpy(s.data[x], m->data[x], m->height * sizeof(Cell));
+        }
     }
+
     return s;
 }
+
 void FreeSnapshot(MapSnapshot* s) {
-    if (!s->data) return;
-    for (int i = 0; i < s->width; i++) free(s->data[i]);
+    if (!s->data) {
+        return;
+    }
+
+    for (int i = 0; i < s->width; i++) {
+        free(s->data[i]);
+    }
+
     free(s->data); s->data = nullptr;
 }
+
 void RestoreSnapshot(DynamicMap* m, const MapSnapshot* s) {
-    for (int i = 0; i < m->width; i++) free(m->data[i]);
+    for (int i = 0; i < m->width; i++) {
+        free(m->data[i]);
+    }
+
     free(m->data);
-    m->width = s->width; m->height = s->height;
-    m->offsetX = s->offsetX; m->offsetY = s->offsetY;
+
+    m->width = s->width; 
+    m->height = s->height;
+
+    m->offsetX = s->offsetX; 
+    m->offsetY = s->offsetY;
+
     m->data = (Cell**)malloc(m->width * sizeof(Cell*));
+    if (!m->data) {
+        return;
+    }
+
     for (int x = 0; x < m->width; x++) {
         m->data[x] = (Cell*)malloc(m->height * sizeof(Cell));
-        memcpy(m->data[x], s->data[x], m->height * sizeof(Cell));
+        if (m->data[x]) {
+            memcpy(m->data[x], s->data[x], m->height * sizeof(Cell));
+        }
     }
 }
+
 void PushUndo(UndoStack* us, const DynamicMap* m) {
-    for (int i = us->current + 1; i < us->count; i++) FreeSnapshot(&us->snapshots[i]);
+    for (int i = us->current + 1; i < us->count; i++) { 
+        FreeSnapshot(&us->snapshots[i]);
+    };
+
     us->count = us->current + 1;
+
     if (us->count >= UNDO_MAX) {
         FreeSnapshot(&us->snapshots[0]);
-        for (int i = 0; i < UNDO_MAX - 1; i++) us->snapshots[i] = us->snapshots[i + 1];
+        for (int i = 0; i < UNDO_MAX - 1; i++) {
+            us->snapshots[i] = us->snapshots[i + 1];
+        }
+
         us->snapshots[UNDO_MAX - 1].data = nullptr;
         us->count = UNDO_MAX - 1; us->current = us->count - 1;
     }
     us->snapshots[us->count] = SnapshotMap(m);
     us->current = us->count; us->count++;
 }
+
 bool UndoStep(UndoStack* us, DynamicMap* m) {
-    if (us->current <= 0) return false;
-    us->current--; RestoreSnapshot(m, &us->snapshots[us->current]); return true;
+    if (us->current <= 0) {
+        return false;
+    }
+
+    us->current--; 
+    RestoreSnapshot(m, &us->snapshots[us->current]); 
+    return true;
 }
 bool RedoStep(UndoStack* us, DynamicMap* m) {
-    if (us->current >= us->count - 1) return false;
-    us->current++; RestoreSnapshot(m, &us->snapshots[us->current]); return true;
+    if (us->current >= us->count - 1) {
+        return false;
+    }
+
+    us->current++; 
+
+    RestoreSnapshot(m, &us->snapshots[us->current]); 
+    return true;
 }
-void InitUndoStack(UndoStack* us) { memset(us->snapshots, 0, sizeof(us->snapshots)); us->count = 0; us->current = -1; }
-void ClearUndoStack(UndoStack* us) { for (int i = 0; i < us->count; i++) FreeSnapshot(&us->snapshots[i]); us->count = 0; us->current = -1; }
+void InitUndoStack(UndoStack* us) { 
+    memset(us->snapshots, 0, sizeof(us->snapshots)); 
+    us->count = 0; 
+    us->current = -1; 
+}
+
+
+void ClearUndoStack(UndoStack* us) {
+    for (int i = 0; i < us->count; i++) { 
+        FreeSnapshot(&us->snapshots[i]); 
+        us->count = 0; 
+        us->current = -1; 
+    }
+}
 void FreeClipboard(Clipboard* cb) {
-    free(cb->cells); cb->cells = nullptr;
-    free(cb->relX);  cb->relX = nullptr;
-    free(cb->relY);  cb->relY = nullptr;
+    free(cb->cells); 
+    cb->cells = nullptr;
+
+    free(cb->relX);  
+    cb->relX = nullptr;
+
+    free(cb->relY);  
+    cb->relY = nullptr;
+
     cb->count = 0;
 }
+
 void CopySelection(Clipboard* cb, const SelectionState* sel, const DynamicMap*) {
-    if (sel->count == 0) return;
-    FreeClipboard(cb);
-    int minX = sel->srcX[0], minY = sel->srcY[0], maxX = minX, maxY = minY;
-    for (int i = 1; i < sel->count; i++) {
-        if (sel->srcX[i] < minX) minX = sel->srcX[i]; if (sel->srcY[i] < minY) minY = sel->srcY[i];
-        if (sel->srcX[i] > maxX) maxX = sel->srcX[i]; if (sel->srcY[i] > maxY) maxY = sel->srcY[i];
+    if (!cb || !sel || sel->count <= 0) {
+        return;
     }
-    cb->boundsW = maxX - minX + 1; cb->boundsH = maxY - minY + 1;
+
+    FreeClipboard(cb);
+
+    int minX = sel->srcX[0], minY = sel->srcY[0], maxX = minX, maxY = minY;
+
+    for (int i = 1; i < sel->count; i++) {
+        if (sel->srcX[i] < minX) minX = sel->srcX[i];
+        if (sel->srcY[i] < minY) minY = sel->srcY[i];
+        if (sel->srcX[i] > maxX) maxX = sel->srcX[i];
+        if (sel->srcY[i] > maxY) maxY = sel->srcY[i];
+    }
+
+    cb->boundsW = maxX - minX + 1;
+    cb->boundsH = maxY - minY + 1;
     cb->count = sel->count;
+
+
     cb->cells = (Cell*)malloc(cb->count * sizeof(Cell));
     cb->relX = (int*)malloc(cb->count * sizeof(int));
     cb->relY = (int*)malloc(cb->count * sizeof(int));
+
+    if (!cb->cells || !cb->relX || !cb->relY) {
+        free(cb->cells);
+        free(cb->relX);
+        free(cb->relY);
+        cb->cells = NULL;
+        cb->relX = NULL;
+        cb->relY = NULL;
+        cb->count = 0;
+        return;
+    }
+
     for (int i = 0; i < sel->count; i++) {
         cb->cells[i] = sel->cells[i];
         cb->relX[i] = sel->srcX[i] - minX;
         cb->relY[i] = sel->srcY[i] - minY;
     }
 }
+
 void PasteClipboard(Clipboard* cb, DynamicMap* map, SelectionGrid* sg, SelectionState* sel, int plx, int ply) {
-    if (cb->count == 0) return;
-    for (int x = 0; x < sg->width; x++) memset(sg->data[x], 0, sg->height * sizeof(bool));
+    if (cb->count == 0) { 
+        return;
+    };
+
+    for (int x = 0; x < sg->width; x++) { 
+        memset(sg->data[x], 0, sg->height * sizeof(bool));
+    };
+
     sel->count = 0; sel->isMoving = false;
     for (int i = 0; i < cb->count; i++) {
         int lx = plx + cb->relX[i], ly = ply + cb->relY[i];
         int ax = lx + map->offsetX, ay = ly + map->offsetY;
+
         if (ax >= 0 && ax < map->width && ay >= 0 && ay < map->height) {
             map->data[ax][ay] = cb->cells[i]; sg->data[ax][ay] = true;
         }
     }
 }
 void RotateClipboardCW(Clipboard* cb) {
-    if (cb->count == 0) return;
+    if (cb->count == 0) { 
+        return; 
+    };
+
     int newW = cb->boundsH, newH = cb->boundsW;
-    for (int i = 0; i < cb->count; i++) { int ox = cb->relX[i], oy = cb->relY[i]; cb->relX[i] = (cb->boundsH - 1) - oy; cb->relY[i] = ox; }
-    cb->boundsW = newW; cb->boundsH = newH;
+
+    for (int i = 0; i < cb->count; i++) { 
+        int ox = cb->relX[i], oy = cb->relY[i]; 
+        cb->relX[i] = (cb->boundsH - 1) - oy; cb->relY[i] = ox; 
+    }
+
+    cb->boundsW = newW; 
+    cb->boundsH = newH;
 }
 void MirrorClipboardX(Clipboard* cb) {
-    if (cb->count == 0) return;
-    for (int i = 0; i < cb->count; i++) cb->relX[i] = (cb->boundsW - 1) - cb->relX[i];
+    if (cb->count == 0) { 
+        return; 
+    };
+
+    for (int i = 0; i < cb->count; i++) { 
+        cb->relX[i] = (cb->boundsW - 1) - cb->relX[i]; 
+    };
 }
 void MirrorClipboardY(Clipboard* cb) {
-    if (cb->count == 0) return;
-    for (int i = 0; i < cb->count; i++) cb->relY[i] = (cb->boundsH - 1) - cb->relY[i];
+    if (cb->count == 0) {
+        return;
+    }
+
+    for (int i = 0; i < cb->count; i++) { 
+        cb->relY[i] = (cb->boundsH - 1) - cb->relY[i];
+    };
 }
+
+//predelat
 void RotateSelectionCW(DynamicMap* map, SelectionGrid* sg, SelectionState* sel) {
     if (sel->count == 0) return;
     int minX = sel->srcX[0], minY = sel->srcY[0], maxX = minX, maxY = minY;
@@ -237,18 +374,32 @@ DynamicMap LoadMap(const char* path, bool* ok) {
     }
     fclose(f); *ok = true; return m;
 }
+
 void FreeDynamicMap(DynamicMap* m) {
-    for (int i = 0; i < m->width; i++) free(m->data[i]);
-    free(m->data); m->data = nullptr; m->width = 0; m->height = 0;
+    for (int i = 0; i < m->width; i++) {
+        free(m->data[i]);
+    }
+
+    free(m->data); 
+    m->data = nullptr; 
+    m->width = 0; 
+    m->height = 0;
 }
+
 SelectionGrid InitSelectionGrid(int w, int h) {
-    SelectionGrid g; g.width = w; g.height = h;
+    SelectionGrid g; 
+    g.width = w; 
+    g.height = h;
+
     g.data = (bool**)malloc(w * sizeof(bool*));
-    for (int i = 0; i < w; i++) g.data[i] = (bool*)calloc(h, sizeof(bool));
+    for (int i = 0; i < w; i++) { 
+        g.data[i] = (bool*)calloc(h, sizeof(bool)); 
+    };
+
     return g;
 }
 void FreeSelectionGrid(SelectionGrid* sg) {
-    for (int i = 0; i < sg->width; i++) free(sg->data[i]);
+    for (int i = 0; i < sg->width; i++)  free(sg->data[i]);
     free(sg->data); sg->data = nullptr; sg->width = 0; sg->height = 0;
 }
 void ExpandSelectionGrid(SelectionGrid* sg, int newW, int newH, int shiftX, int shiftY) {
@@ -268,33 +419,69 @@ void ClearSelection(SelectionGrid* sg, SelectionState* sel) {
 }
 void AddToCapacity(SelectionState* sel, int needed) {
     if (needed <= sel->capacity) return;
+
     int nc = (needed + 63) & ~63;
-    sel->cells = (Cell*)realloc(sel->cells, nc * sizeof(Cell));
-    sel->srcX = (int*)realloc(sel->srcX, nc * sizeof(int));
-    sel->srcY = (int*)realloc(sel->srcY, nc * sizeof(int));
+
+    Cell* next_cells = (Cell*)realloc(sel->cells, nc * sizeof(Cell));
+    int* next_srcX = (int*)realloc(sel->srcX, nc * sizeof(int));
+    int* next_srcY = (int*)realloc(sel->srcY, nc * sizeof(int));
+
+    if (!next_cells || !next_srcX || !next_srcY) {
+        if (next_cells) sel->cells = next_cells;
+        if (next_srcX)   sel->srcX = next_srcX;
+        if (next_srcY)   sel->srcY = next_srcY;
+        return;
+    }
+
+    sel->cells = next_cells;
+    sel->srcX = next_srcX;
+    sel->srcY = next_srcY;
     sel->capacity = nc;
 }
+
 void RebuildSelectionList(SelectionGrid* sg, DynamicMap* map, SelectionState* sel) {
     sel->count = 0;
-    for (int x = 0; x < sg->width; x++) for (int y = 0; y < sg->height; y++) if (sg->data[x][y]) sel->count++;
+
+    for (int x = 0; x < sg->width; x++) { 
+        for (int y = 0; y < sg->height; y++) { 
+            if (sg->data[x][y]) sel->count++; 
+        }
+    };
+
     AddToCapacity(sel, sel->count);
+
     int idx = 0;
-    for (int x = 0; x < sg->width; x++) for (int y = 0; y < sg->height; y++) if (sg->data[x][y]) {
-        sel->srcX[idx] = x; sel->srcY[idx] = y; sel->cells[idx] = map->data[x][y]; idx++;
+
+    for (int x = 0; x < sg->width; x++) {
+        for (int y = 0; y < sg->height; y++) {
+            if (sg->data[x][y]) {
+                sel->srcX[idx] = x; 
+                sel->srcY[idx] = y; 
+                sel->cells[idx] = map->data[x][y]; 
+                idx++;
+            }
+        }
     }
 }
 DynamicMap InitDynamicMap(int w, int h) {
-    DynamicMap m; m.width = w; m.height = h;
-    m.offsetX = w / 2; m.offsetY = h / 2;
+    DynamicMap m; 
+    m.width = w; 
+    m.height = h;
+    m.offsetX = w / 2;
+    m.offsetY = h / 2;
     m.data = (Cell**)malloc(w * sizeof(Cell*));
+
     for (int i = 0; i < w; i++) {
         m.data[i] = (Cell*)malloc(h * sizeof(Cell));
-        for (int j = 0; j < h; j++) m.data[i][j] = Cell{ 0.0f, DARKGRAY, TYPE_BLOCK, false };
+        for (int j = 0; j < h; j++) {
+            m.data[i][j] = Cell{ 0.0f, DARKGRAY, TYPE_BLOCK, false }; 
+        }
     }
     return m;
 }
 void ExpandMap(DynamicMap* m, int newW, int newH, int shiftX, int shiftY) {
     Cell** nd = (Cell**)malloc(newW * sizeof(Cell*));
+
     for (int i = 0; i < newW; i++) {
         nd[i] = (Cell*)malloc(newH * sizeof(Cell));
         for (int j = 0; j < newH; j++) {
@@ -304,95 +491,239 @@ void ExpandMap(DynamicMap* m, int newW, int newH, int shiftX, int shiftY) {
         }
     }
     FreeDynamicMap(m);
-    m->data = nd; m->width = newW; m->height = newH;
-    m->offsetX += shiftX; m->offsetY += shiftY;
+    m->data = nd; 
+    m->width = newW; 
+    m->height = newH;
+    m->offsetX += shiftX; 
+    m->offsetY += shiftY;
 }
 void CommitMove(DynamicMap* map, SelectionGrid* sg, SelectionState* sel, int dx, int dy) {
-    if (dx == 0 && dy == 0) return;
-    for (int i = 0; i < sel->count; i++) map->data[sel->srcX[i]][sel->srcY[i]].height = -1.0f;
+    if (dx == 0 && dy == 0) { 
+        return; 
+    };
+
+    for (int i = 0; i < sel->count; i++) {
+        map->data[sel->srcX[i]][sel->srcY[i]].height = -1.0f;
+    };
+
     for (int i = 0; i < sel->count; i++) {
         int nx = sel->srcX[i] + dx, ny = sel->srcY[i] + dy;
-        if (nx >= 0 && nx < map->width && ny >= 0 && ny < map->height) map->data[nx][ny] = sel->cells[i];
+        if (nx >= 0 && nx < map->width && ny >= 0 && ny < map->height) { 
+            map->data[nx][ny] = sel->cells[i]; 
+        }
     }
-    for (int x = 0; x < map->width; x++) for (int y = 0; y < map->height; y++)
-        if (map->data[x][y].height == -1.0f) map->data[x][y] = Cell{ 0.0f, DARKGRAY, TYPE_BLOCK, false };
-    for (int x = 0; x < sg->width; x++) memset(sg->data[x], 0, sg->height);
+    for (int x = 0; x < map->width; x++) {
+        for (int y = 0; y < map->height; y++) {
+            if (map->data[x][y].height == -1.0f) { 
+                map->data[x][y] = Cell{ 0.0f, DARKGRAY, TYPE_BLOCK, false }; 
+            }
+        }
+    }
+
+    for (int x = 0; x < sg->width; x++) {
+        memset(sg->data[x], 0, sg->height);
+    };
+
     for (int i = 0; i < sel->count; i++) {
         int nx = sel->srcX[i] + dx, ny = sel->srcY[i] + dy;
         if (nx >= 0 && nx < sg->width && ny >= 0 && ny < sg->height) sg->data[nx][ny] = true;
     }
+
     RebuildSelectionList(sg, map, sel);
 }
 void SetStatus(StatusMsg* s, const char* txt, Color c) {
-    strncpy(s->text, txt, 127); s->text[127] = '\0'; s->timer = 2.5f; s->color = c;
+    strncpy(s->text, txt, 127); 
+    s->text[127] = '\0'; 
+    s->timer = 2.5f; 
+    s->color = c;
 }
+
 void DrawLine2DMap(DynamicMap* map, int x0, int y0, int x1, int y1, Cell cell, bool erase) {
-    int dx = abs(x1 - x0), dy = abs(y1 - y0);
+    int dx = abs(x1 - x0);
+    int dy = abs(y1 - y0);
+
     int sx = (x0 < x1) ? 1 : -1, sy = (y0 < y1) ? 1 : -1;
     int err = dx - dy;
+
     for (;;) {
-        int ax = x0 + map->offsetX, ay = y0 + map->offsetY;
+        int ax = x0 + map->offsetX;
+        int ay = y0 + map->offsetY;
+
         if (ax >= 0 && ax < map->width && ay >= 0 && ay < map->height) {
-            if (erase) map->data[ax][ay] = Cell{ 0.0f, DARKGRAY, TYPE_BLOCK, false };
-            else       map->data[ax][ay] = cell;
+            if (erase) { 
+                map->data[ax][ay] = Cell{ 0.0f, DARKGRAY, TYPE_BLOCK, false };
+            } else { 
+                map->data[ax][ay] = cell; 
+            };
         }
+
         if (x0 == x1 && y0 == y1) break;
+
         int e2 = 2 * err;
         if (e2 > -dy) { err -= dy; x0 += sx; }
         if (e2 < dx) { err += dx; y0 += sy; }
     }
 }
+
 #define MAX_PREVIEW 4096
 struct PreviewCell { int lx, ly; };
 static PreviewCell gPreview[MAX_PREVIEW];
-static int         gPreviewCount = 0;
-void ClearPreview() { gPreviewCount = 0; }
-void AddPreview(int lx, int ly) {
-    if (gPreviewCount < MAX_PREVIEW) { gPreview[gPreviewCount].lx = lx; gPreview[gPreviewCount].ly = ly; gPreviewCount++; }
+static int gPreviewCount = 0;
+
+
+void ClearPreview() { 
+    gPreviewCount = 0; 
 }
+
+void AddPreview(int lx, int ly) {
+    if (gPreviewCount < MAX_PREVIEW) { 
+        gPreview[gPreviewCount].lx = lx; 
+        gPreview[gPreviewCount].ly = ly; 
+        gPreviewCount++; 
+    }
+}
+
 void BuildLinePreview(int x0, int y0, int x1, int y1) {
     ClearPreview();
-    int dx = abs(x1 - x0), dy = abs(y1 - y0);
-    int sx = (x0 < x1) ? 1 : -1, sy = (y0 < y1) ? 1 : -1, err = dx - dy;
-    for (;;) { AddPreview(x0, y0); if (x0 == x1 && y0 == y1) break; int e2 = 2 * err; if (e2 > -dy) { err -= dy; x0 += sx; } if (e2 < dx) { err += dx; y0 += sy; } }
+    int dx = abs(x1 - x0);
+    int dy = abs(y1 - y0);
+
+    int sx = (x0 < x1) ? 1 : -1;
+    int sy = (y0 < y1) ? 1 : -1;
+    int err = dx - dy;
+
+    for (;;) { 
+        AddPreview(x0, y0); 
+        if (x0 == x1 && y0 == y1) break; 
+        int e2 = 2 * err; 
+        if (e2 > -dy) { 
+            err -= dy; 
+            x0 += sx; 
+        } if (e2 < dx) { 
+            err += dx; 
+            y0 += sy; 
+        } 
+    }
 }
 void BuildRectPreview(int x0, int y0, int x1, int y1) {
     ClearPreview();
     int lx0 = (x0 < x1) ? x0 : x1, lx1 = (x0 < x1) ? x1 : x0;
     int ly0 = (y0 < y1) ? y0 : y1, ly1 = (y0 < y1) ? y1 : y0;
-    for (int x = lx0; x <= lx1; x++) { AddPreview(x, ly0); if (ly1 != ly0) AddPreview(x, ly1); }
-    for (int y = ly0 + 1; y < ly1; y++) { AddPreview(lx0, y); if (lx1 != lx0) AddPreview(lx1, y); }
-}
-void BuildCirclePreview(int cx, int cy, int rx, int ry) {
-    ClearPreview();
-    int x = 0, y = ry;
-    long rx2 = (long)rx * rx, ry2 = (long)ry * ry;
-    long dx = 0, dy = 2 * rx2 * y, d = ry2 - rx2 * ry + rx2 / 4;
-    auto put4 = [&](int px, int py) { AddPreview(cx + px, cy + py); AddPreview(cx - px, cy + py); AddPreview(cx + px, cy - py); AddPreview(cx - px, cy - py); };
-    while (dx < dy) { put4(x, y); x++; dx += 2 * ry2; if (d < 0) d += ry2 + dx; else { y--; dy -= 2 * rx2; d += ry2 + dx - dy; } }
-    d = (long)ry2 * (x + 0.5f) * (x + 0.5f) + (long)rx2 * (y - 1) * (y - 1) - (long)rx2 * ry2;
-    while (y >= 0) { put4(x, y); y--; dy -= 2 * rx2; if (d > 0) d += rx2 - dy; else { x++; dx += 2 * ry2; d += rx2 - dy + dx; } }
-}
-void CommitPreview(DynamicMap* map, Cell cell) {
-    for (int i = 0; i < gPreviewCount; i++) {
-        int ax = gPreview[i].lx + map->offsetX, ay = gPreview[i].ly + map->offsetY;
-        if (ax >= 0 && ax < map->width && ay >= 0 && ay < map->height) map->data[ax][ay] = cell;
+
+    for (int x = lx0; x <= lx1; x++) { 
+        AddPreview(x, ly0); 
+        if (ly1 != ly0) { 
+            AddPreview(x, ly1); 
+        }
+    }
+
+    for (int y = ly0 + 1; y < ly1; y++) { 
+        AddPreview(lx0, y); 
+        if (lx1 != lx0) { 
+            AddPreview(lx1, y); 
+        }
     }
 }
+
+void BuildCirclePreview(int centerX, int centerY, int radiusX, int radiusY) {
+    ClearPreview();
+
+    long long a2 = (long long)radiusX * radiusX;
+    long long b2 = (long long)radiusY * radiusY;
+
+    int x = 0;
+    int y = radiusY;
+
+    auto plotSymmetry = [&](int offsetX, int offsetY) {
+        AddPreview(centerX + offsetX, centerY + offsetY);
+        AddPreview(centerX - offsetX, centerY + offsetY);
+        AddPreview(centerX + offsetX, centerY - offsetY);
+        AddPreview(centerX - offsetX, centerY - offsetY);
+        };
+
+    double d1 = b2 - (a2 * radiusY) + (0.25 * a2);
+    long long dx = 2 * b2 * x;
+    long long dy = 2 * a2 * y;
+
+    while (dx < dy) {
+        plotSymmetry(x, y);
+
+        if (d1 < 0) {
+            x++;
+            dx += 2 * b2;
+            d1 += dx + b2;
+        }
+        else {
+            x++;
+            y--;
+            dx += 2 * b2;
+            dy -= 2 * a2;
+            d1 += dx - dy + b2;
+        }
+    }
+
+    double d2 = b2 * (x + 0.5) * (x + 0.5) +
+        a2 * (y - 1) * (y - 1) -
+        a2 * b2;
+
+    while (y >= 0) {
+        plotSymmetry(x, y);
+
+        if (d2 > 0) {
+            y--;
+            dy -= 2 * a2;
+            d2 += a2 - dy;
+        }
+        else {
+            y--;
+            x++;
+            dx += 2 * b2;
+            dy -= 2 * a2;
+            d2 += dx - dy + a2;
+        }
+    }
+}
+
+void CommitPreview(DynamicMap* map, Cell cell) {
+    for (int i = 0; i < gPreviewCount; i++) {
+        int ax = gPreview[i].lx + map->offsetX;
+        int ay = gPreview[i].ly + map->offsetY;
+
+        if (ax >= 0 && ax < map->width && ay >= 0 && ay < map->height) {
+            map->data[ax][ay] = cell;
+        };
+    }
+}
+
 bool TryParseHex(const char* s, Color* out) {
     const char* p = s;
-    if (*p == '#') p++;
-    if (strlen(p) != 6) return false;
+    if (*p == '#') { 
+        p++;
+    };
+
+    if (strlen(p) != 6) { 
+        return false; 
+    };
+
     unsigned int r, g, b;
-    if (sscanf(p, "%02x%02x%02x", &r, &g, &b) != 3) return false;
-    out->r = (uint8_t)r; out->g = (uint8_t)g; out->b = (uint8_t)b; out->a = 255; return true;
+    if (sscanf(p, "%02x%02x%02x", &r, &g, &b) != 3) { 
+        return false;
+    };
+
+    out->r = (uint8_t)r; 
+    out->g = (uint8_t)g; 
+    out->b = (uint8_t)b; 
+    out->a = 255; 
+    return true;
 }
 int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI | FLAG_WINDOW_ALWAYS_RUN);
+
     InitWindow(1200, 800, "Demo");
     SetWindowMinSize(800, 600);
     SetTargetFPS(60);
-    GameScene currentScene = SCENE_LAUNCH;
+
+    GameScene currentScene = SCENE_WHITE;
     ContextMenu menu = { false, {0,0}, {0,0}, 0, 0, 0 };
     ToolMode toolMode = TOOL_NONE;
     MirrorMode mirrorMode = MIRROR_NONE;
@@ -977,36 +1308,81 @@ int main() {
             EndDrawing();
         }
         else {
-            if (IsKeyPressed(KEY_BACKSPACE)) cursorLocked = !cursorLocked;
-            if (cursorLocked) { if (!IsCursorHidden()) DisableCursor(); UpdateCamera(&camera3D, CAMERA_FIRST_PERSON); }
-            else { if (IsCursorHidden()) EnableCursor(); }
-            camera3D.position.y = 0.8f; camera3D.target.y = 0.8f;
-            if (IsKeyPressed(KEY_ESCAPE)) { currentScene = SCENE_WHITE; cursorLocked = true; }
-            if (IsKeyPressed(KEY_F1)) showSkyColorPicker = !showSkyColorPicker;
+            if (IsKeyPressed(KEY_BACKSPACE)) {
+                cursorLocked = !cursorLocked;
+            }
+
+            if (cursorLocked) { 
+                if (!IsCursorHidden()) { 
+                    DisableCursor(); 
+                    UpdateCamera(&camera3D, CAMERA_FIRST_PERSON); 
+                } 
+            }
+            else { 
+                if (IsCursorHidden()) { 
+                    EnableCursor(); 
+                }
+            }
+
+            camera3D.position.y = 0.8f; 
+            camera3D.target.y = 0.8f;
+
+
+            if (IsKeyPressed(KEY_ESCAPE)) { 
+                currentScene = SCENE_WHITE; 
+                cursorLocked = true; 
+            }
+
+            if (IsKeyPressed(KEY_F1)) {
+                showSkyColorPicker = !showSkyColorPicker;
+            }
+
             BeginDrawing();
             ClearBackground(skyColor);
             BeginMode3D(camera3D);
+
             Vector3 fp = { (map.width / 2.0f) - map.offsetX, 0, (map.height / 2.0f) - map.offsetY };
+
             DrawPlane(fp, { (float)map.width * 2, (float)map.height * 2 }, { 30,30,30,255 });
-            for (int y = 0; y < map.height; y++) for (int x = 0; x < map.width; x++)
-                if (map.data[x][y].height > 0) {
-                    Vector3 pos = { (float)(x - map.offsetX), map.data[x][y].height / 2.0f, (float)(y - map.offsetY) };
-                    DrawCube(pos, 1.0f, map.data[x][y].height, 1.0f, map.data[x][y].color);
-                    if (map.data[x][y].solid) DrawCubeWires(pos, 1.0f, map.data[x][y].height, 1.0f, Fade({ 255,80,80,255 }, 0.5f));
-                    else DrawCubeWires(pos, 1.0f, map.data[x][y].height, 1.0f, Fade(BLACK, 0.3f));
-                }
+
+            for (int y = 0; y < map.height; y++) {
+                for (int x = 0; x < map.width; x++)
+                    if (map.data[x][y].height > 0) {
+                        Vector3 pos = { (float)(x - map.offsetX), map.data[x][y].height / 2.0f, (float)(y - map.offsetY) };
+
+                        DrawCube(pos, 1.0f, map.data[x][y].height, 1.0f, map.data[x][y].color);
+
+                        if (map.data[x][y].solid) { 
+                            DrawCubeWires(pos, 1.0f, map.data[x][y].height, 1.0f, Fade({ 255,80,80,255 }, 0.5f));
+                        }
+                        else { 
+                            DrawCubeWires(pos, 1.0f, map.data[x][y].height, 1.0f, Fade(BLACK, 0.3f)); 
+                        };
+                    }
+            }
             EndMode3D();
             DrawRectangle(0, sh - 50, sw, 50, { 35,35,35,200 });
+
             float cx2 = (float)sw / 2;
-            if (GuiButton({ cx2 - 110, (float)sh - 40, 100, 30 }, "EDITOR")) currentScene = SCENE_WHITE;
-            if (GuiButton({ cx2 + 10,  (float)sh - 40, 100, 30 }, "MAP"))    currentScene = SCENE_BLUE;
+            if (GuiButton({ cx2 - 110, (float)sh - 40, 100, 30 }, "EDITOR")) {
+                currentScene = SCENE_WHITE;
+            }
+
+            if (GuiButton({ cx2 + 10,  (float)sh - 40, 100, 30 }, "MAP")) {
+                currentScene = SCENE_BLUE;
+            }
+
             DrawText("F1 = Sky Color | Backspace = Toggle cursor | Esc = Back", 10, sh - 42, 9, { 140,140,160,255 });
+            
             if (showSkyColorPicker) {
                 DrawRectangle(10, 10, 175, 200, { 40,40,40,230 });
                 DrawRectangleLinesEx({ 10, 10, 175, 200 }, 1, LIGHTGRAY);
                 DrawText("Sky Color", 18, 16, 10, LIGHTGRAY);
                 GuiColorPicker({ 18, 30, 155, 155 }, NULL, &skyColor);
-                if (GuiButton({ 18, 190, 80, 16 }, "Close")) showSkyColorPicker = false;
+
+                if (GuiButton({ 18, 190, 80, 16 }, "Close")) {
+                    showSkyColorPicker = false;
+                }
             }
             DrawFPS(sw - 80, sh - 35);
             EndDrawing();
