@@ -13,7 +13,7 @@ typedef enum { TYPE_BLOCK = 0, TYPE_DECOR, TYPE_TEXTURE_ONLY } CellType;
 typedef enum { TOOL_NONE = 0, TOOL_BRUSH, TOOL_ERASER, TOOL_SELECT, TOOL_LINE, TOOL_RECT, TOOL_CIRCLE } ToolMode;
 typedef enum { MIRROR_NONE = 0, MIRROR_X, MIRROR_Y, MIRROR_BOTH } MirrorMode;
 #define CELL_BASE_SIZE 40.0f
-#define MAX_UNZOOM 0.15f
+#define MAX_UNZOOM 0.1f
 #define MAX_ZOOM   3.0f
 #define UNDO_MAX   64
 
@@ -721,33 +721,43 @@ int main() {
 
     InitWindow(1200, 800, "Demo");
     SetWindowMinSize(800, 600);
-    SetTargetFPS(60);
+    //SetTargetFPS(60);
 
     GameScene currentScene = SCENE_WHITE;
-    ContextMenu menu = { false, {0,0}, {0,0}, 0, 0, 0 };
+    ContextMenu menu  = { false, {0,0}, {0,0}, 0, 0, 0 };
     ToolMode toolMode = TOOL_NONE;
     MirrorMode mirrorMode = MIRROR_NONE;
+
     bool cursorLocked = true;
+
     StatusMsg status = { "", 0.0f, WHITE };
+
     char launchFilePath[256] = "map.bin";
     bool launchEditingFile = false;
-    int  launchFileLen = (int)strlen(launchFilePath);
+    int launchFileLen = (int)strlen(launchFilePath);
+
     DynamicMap map = InitDynamicMap(50, 50);
     SelectionGrid selGrid = InitSelectionGrid(map.width, map.height);
-    SelectionState sel = { nullptr, nullptr, nullptr, 0, 0,
-                           false, {0,0}, {0,0}, false, {0,0}, 0, 0 };
+    SelectionState sel = { nullptr, nullptr, nullptr, 0, 0, false, {0,0}, {0,0}, false, {0,0}, 0, 0 };
     Clipboard clipboard = { nullptr, nullptr, nullptr, 0, 0, 0 };
+
     bool pasteMode = false;
-    int  pasteLogicX = 0, pasteLogicY = 0;
+    int pasteLogicX = 0;
+    int pasteLogicY = 0;
+
     UndoStack undoStack;
     InitUndoStack(&undoStack);
     PushUndo(&undoStack, &map);
+
     bool showNewConfirm = false;
     Color brushColor = { 200, 200, 200, 255 };
-    bool  shapeFirstClick = false;
-    int   shapeStartLX = 0, shapeStartLY = 0;
+    bool shapeFirstClick = false;
+    int shapeStartLX = 0;
+    int shapeStartLY = 0;
+
     Color skyColor = { 25, 25, 45, 255 };
-    bool  showSkyColorPicker = false;
+    bool showSkyColorPicker = false;
+
     char hexInputBuf[16] = "";
     bool hexEditing = false;
     char rBuf[8] = "", gBuf2[8] = "", bBuf[8] = "";
@@ -759,86 +769,34 @@ int main() {
         sprintf(bBuf, "%d", brushColor.b);
         };
     syncBufsFromColor();
+
     Camera2D camera2D = {};
     camera2D.target = { 0, 0 };
     camera2D.offset = { 600.0f, 400.0f };
     camera2D.zoom = 1.0f;
-    Camera3D camera3D = {};
-    camera3D.position = { 0.0f, 0.8f, 0.0f };
-    camera3D.target = { 1.0f, 0.8f, 1.0f };
-    camera3D.up = { 0.0f, 1.0f, 0.0f };
-    camera3D.fovy = 65.0f;
-    camera3D.projection = CAMERA_PERSPECTIVE;
+
+    float rcX = 0.0f, rcY = 0.0f;   
+    float rcAngle = 0.0f;            
+    float rcFOV = 1.2f;           
+    float rcMoveSpeed = 3.5f;
+    float rcTurnSpeed = 2.0f;
+    float rcPitch = 0;              
+    float rcMouseSensX = 0.003f;
+    float rcMouseSensY = 2.0f;
+
     bool isDragging = false;
     bool strokeStarted = false;
     char saveFile[256] = "map.bin";
     bool editingFilename = false;
     int  fileLen = (int)strlen(saveFile);
+
     while (!WindowShouldClose()) {
         float dt = GetFrameTime();
         if (status.timer > 0) status.timer -= dt;
         int sw = GetScreenWidth(), sh = GetScreenHeight();
         Vector2 mousePos = GetMousePosition();
         bool ctrl = IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL);
-        if (currentScene == SCENE_LAUNCH) {
-            if (IsCursorHidden()) EnableCursor();
-            BeginDrawing();
-            ClearBackground({ 20, 20, 28, 255 });
-            int titleFontSize = 48;
-            const char* title = "DEMO";
-            int tw = MeasureText(title, titleFontSize);
-            int cx = sw / 2, cy = sh / 2;
-            DrawText(title, cx - tw / 2, cy - 140, titleFontSize, { 200, 220, 255, 255 });
-            DrawLine(cx - 100, cy - 82, cx + 100, cy - 82, { 80, 120, 200, 180 });
-            Rectangle fileR = { (float)(cx - 140), (float)(cy - 55), 280, 28 };
-            bool fileHov = CheckCollisionPointRec(mousePos, fileR);
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) launchEditingFile = fileHov;
-            DrawRectangleLinesEx(fileR, 1, launchEditingFile ? Color{ 0, 200, 255, 255 } : (fileHov ? Color{ 120, 120, 180, 255 } : Color{ 60, 60, 80, 255 }));
-            DrawText(launchFilePath, (int)fileR.x + 6, (int)fileR.y + 8, 10, { 180, 200, 255, 255 });
-            DrawText("File:", cx - 140, cy - 70, 9, { 120, 140, 180, 200 });
-            if (launchEditingFile) {
-                int key;
-                while ((key = GetCharPressed()) > 0) if (key >= 32 && launchFileLen < 255) { launchFilePath[launchFileLen++] = (char)key; launchFilePath[launchFileLen] = '\0'; }
-                if (IsKeyPressed(KEY_BACKSPACE) && launchFileLen > 0) launchFilePath[--launchFileLen] = '\0';
-                if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE)) launchEditingFile = false;
-                if ((int)(GetTime() * 2) % 2 == 0) {
-                    int cx2 = (int)fileR.x + 6 + MeasureText(launchFilePath, 10);
-                    DrawLine(cx2, (int)fileR.y + 4, cx2, (int)fileR.y + 22, { 0, 200, 255, 255 });
-                }
-            }
-            Rectangle newR = { (float)(cx - 100), (float)(cy), 200, 42 };
-            bool newHov = CheckCollisionPointRec(mousePos, newR);
-            DrawRectangle((int)newR.x, (int)newR.y, (int)newR.width, (int)newR.height, newHov ? Color{ 60, 100, 180, 255 } : Color{ 40, 60, 120, 255 });
-            DrawRectangleLinesEx(newR, 1, { 100, 140, 220, 255 });
-            int ntw = MeasureText("NEW MAP", 16);
-            DrawText("NEW MAP", cx - ntw / 2, (int)newR.y + 13, 16, { 220, 235, 255, 255 });
-            Rectangle openR = { (float)(cx - 100), (float)(cy + 56), 200, 42 };
-            bool openHov = CheckCollisionPointRec(mousePos, openR);
-            DrawRectangle((int)openR.x, (int)openR.y, (int)openR.width, (int)openR.height, openHov ? Color{ 50, 90, 60, 255 } : Color{ 30, 60, 40, 255 });
-            DrawRectangleLinesEx(openR, 1, { 80, 160, 100, 255 });
-            int otw = MeasureText("OPEN MAP", 16);
-            DrawText("OPEN MAP", cx - otw / 2, (int)openR.y + 13, 16, { 200, 240, 210, 255 });
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && newHov && !launchEditingFile) {
-                strncpy(saveFile, launchFilePath, 255); fileLen = (int)strlen(saveFile);
-                currentScene = SCENE_WHITE;
-            }
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && openHov && !launchEditingFile) {
-                strncpy(saveFile, launchFilePath, 255); fileLen = (int)strlen(saveFile);
-                bool ok; DynamicMap loaded = LoadMap(saveFile, &ok);
-                if (ok) {
-                    FreeDynamicMap(&map); map = loaded;
-                    FreeSelectionGrid(&selGrid); selGrid = InitSelectionGrid(map.width, map.height);
-                    ClearSelection(&selGrid, &sel);
-                    ClearUndoStack(&undoStack); PushUndo(&undoStack, &map);
-                    currentScene = SCENE_WHITE;
-                    SetStatus(&status, TextFormat("Loaded: %s", saveFile), GREEN);
-                }
-                else SetStatus(&status, TextFormat("Load FAILED: %s", saveFile), RED);
-            }
-            DrawFPS(sw - 80, sh - 20);
-            EndDrawing();
-            continue;
-        }
+
         if (currentScene == SCENE_WHITE) {
             if (IsCursorHidden()) EnableCursor();
             const int COLOR_PANEL_H = 16 + 144 + 4 + 16 + 20 + 48 + 12 + 10;
@@ -1030,6 +988,7 @@ int main() {
             DrawLineEx({ 0, -2000 }, { 0, 2000 }, 2.0f, Fade(GREEN, 0.5f));
             Vector2 tl = GetScreenToWorld2D({ 0, 45 }, camera2D);
             Vector2 br = GetScreenToWorld2D({ (float)sw, (float)sh - 50 }, camera2D);
+
             int sLX = (int)floor(tl.x / CELL_BASE_SIZE) - 1, sLY = (int)floor(tl.y / CELL_BASE_SIZE) - 1;
             int eLX = (int)floor(br.x / CELL_BASE_SIZE) + 1, eLY = (int)floor(br.y / CELL_BASE_SIZE) + 1;
             for (int ly = sLY; ly <= eLY; ly++) for (int lx = sLX; lx <= eLX; lx++) {
@@ -1043,11 +1002,14 @@ int main() {
                         DrawRectangleRec(r, map.data[ax][ay].color);
                         if (map.data[ax][ay].solid) DrawRectangleLinesEx(r, 2.0f / camera2D.zoom, { 255,80,80,200 });
                     }
-                    else DrawRectangleLinesEx(r, 0.5f, DARKGRAY);
+                    else {
+                        if (camera2D.zoom > 0.7f) DrawRectangleLinesEx(r, 0.5f, DARKGRAY);
+                       
+                    };
                 }
                 if (toolMode == TOOL_SELECT && isSel && !sel.isMoving) { DrawRectangleLinesEx(r, 2.5f / camera2D.zoom, { 0,220,255,255 }); DrawRectangleRec(r, { 0,180,255,40 }); }
                 if (toolMode == TOOL_SELECT && isSel && sel.isMoving) DrawRectangleLinesEx(r, 1.5f / camera2D.zoom, Fade(SKYBLUE, 0.5f));
-                if (camera2D.zoom > 0.6f) DrawText(TextFormat("%d,%d", lx, ly), (int)r.x + 2, (int)r.y + 2, 8, Fade(GRAY, 0.4f));
+                if (camera2D.zoom > 1.2f) DrawText(TextFormat("%d,%d", lx, ly), (int)r.x + 2, (int)r.y + 2, 8, Fade(GRAY, 0.4f));
             }
             if (toolMode == TOOL_SELECT && sel.isMoving) {
                 for (int i = 0; i < sel.count; i++) {
@@ -1095,13 +1057,17 @@ int main() {
             }
             EndMode2D();
             {
-                Vector2 cam3dXZ = { camera3D.position.x * CELL_BASE_SIZE + map.offsetX * CELL_BASE_SIZE,
-                                    camera3D.position.z * CELL_BASE_SIZE + map.offsetY * CELL_BASE_SIZE };
-                Vector2 indicatorScreen = GetWorldToScreen2D(cam3dXZ, camera2D);
-                float ix = Clamp(indicatorScreen.x, 160, (float)sw - 10);
-                float iy = Clamp(indicatorScreen.y, 50, (float)sh - 60);
+                Vector2 rcScreen = GetWorldToScreen2D(
+                    { (rcX)*CELL_BASE_SIZE, (rcY)*CELL_BASE_SIZE }, camera2D);
+                float ix = Clamp(rcScreen.x, 160, (float)sw - 10);
+                float iy = Clamp(rcScreen.y, 50, (float)sh - 60);
                 DrawCircle((int)ix, (int)iy, 7, { 255, 100, 0, 220 });
                 DrawCircleLines((int)ix, (int)iy, 7, WHITE);
+             
+                float dlen = 15.0f;
+                DrawLine((int)ix, (int)iy,
+                    (int)(ix + cosf(rcAngle) * dlen),
+                    (int)(iy + sinf(rcAngle) * dlen), { 255,200,0,255 });
                 DrawText("3D", (int)ix + 10, (int)iy - 6, 9, { 255,160,80,255 });
             }
             DrawRectangle(0, 0, sw, 45, { 35, 35, 35, 255 });
@@ -1307,90 +1273,154 @@ int main() {
             DrawFPS(sw - 80, sh - 35);
             EndDrawing();
         }
-        else {
-            if (IsKeyPressed(KEY_BACKSPACE)) {
-                cursorLocked = !cursorLocked;
-            }
+        
+            else {
+                if (IsKeyPressed(KEY_BACKSPACE)) cursorLocked = !cursorLocked;
+                if (IsKeyPressed(KEY_ESCAPE)) { currentScene = SCENE_WHITE; cursorLocked = true; EnableCursor(); }
+                if (IsKeyPressed(KEY_F1))        showSkyColorPicker = !showSkyColorPicker;
 
-            if (cursorLocked) { 
-                if (!IsCursorHidden()) { 
-                    DisableCursor(); 
-                    UpdateCamera(&camera3D, CAMERA_FIRST_PERSON); 
-                } 
-            }
-            else { 
-                if (IsCursorHidden()) { 
-                    EnableCursor(); 
-                }
-            }
+                if (cursorLocked) {
+                    if (!IsCursorHidden()) DisableCursor();
+                    
+                    Vector2 md = GetMouseDelta();
+                    rcAngle += md.x * rcMouseSensX;
+                    rcPitch = Clamp(rcPitch + md.y * rcMouseSensY, -(float)sh * 0.35f, (float)sh * 0.35f);
 
-            camera3D.position.y = 0.8f; 
-            camera3D.target.y = 0.8f;
+                    float dx = 0, dy = 0;
+                    if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) { dx += cosf(rcAngle); dy += sinf(rcAngle); }
+                    if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) { dx -= cosf(rcAngle); dy -= sinf(rcAngle); }
+                    if (IsKeyDown(KEY_A)) { dx += cosf(rcAngle - 1.5708f); dy += sinf(rcAngle - 1.5708f); }
+                    if (IsKeyDown(KEY_D)) { dx += cosf(rcAngle + 1.5708f); dy += sinf(rcAngle + 1.5708f); }
+                    float spd = rcMoveSpeed * dt;
 
-
-            if (IsKeyPressed(KEY_ESCAPE)) { 
-                currentScene = SCENE_WHITE; 
-                cursorLocked = true; 
-            }
-
-            if (IsKeyPressed(KEY_F1)) {
-                showSkyColorPicker = !showSkyColorPicker;
-            }
-
-            BeginDrawing();
-            ClearBackground(skyColor);
-            BeginMode3D(camera3D);
-
-            Vector3 fp = { (map.width / 2.0f) - map.offsetX, 0, (map.height / 2.0f) - map.offsetY };
-
-            DrawPlane(fp, { (float)map.width * 2, (float)map.height * 2 }, { 30,30,30,255 });
-
-            for (int y = 0; y < map.height; y++) {
-                for (int x = 0; x < map.width; x++)
-                    if (map.data[x][y].height > 0) {
-                        Vector3 pos = { (float)(x - map.offsetX), map.data[x][y].height / 2.0f, (float)(y - map.offsetY) };
-
-                        DrawCube(pos, 1.0f, map.data[x][y].height, 1.0f, map.data[x][y].color);
-
-                        if (map.data[x][y].solid) { 
-                            DrawCubeWires(pos, 1.0f, map.data[x][y].height, 1.0f, Fade({ 255,80,80,255 }, 0.5f));
-                        }
-                        else { 
-                            DrawCubeWires(pos, 1.0f, map.data[x][y].height, 1.0f, Fade(BLACK, 0.3f)); 
+                    auto isSolid = [&](float px, float py) -> bool {
+                        int mx = (int)floorf(px) + map.offsetX;
+                        int my = (int)floorf(py) + map.offsetY;
+                        if (mx < 0 || mx >= map.width || my < 0 || my >= map.height) return false;
+                        return map.data[mx][my].height > 0.0f;
                         };
-                    }
-            }
-            EndMode3D();
-            DrawRectangle(0, sh - 50, sw, 50, { 35,35,35,200 });
-
-            float cx2 = (float)sw / 2;
-            if (GuiButton({ cx2 - 110, (float)sh - 40, 100, 30 }, "EDITOR")) {
-                currentScene = SCENE_WHITE;
-            }
-
-            if (GuiButton({ cx2 + 10,  (float)sh - 40, 100, 30 }, "MAP")) {
-                currentScene = SCENE_BLUE;
-            }
-
-            DrawText("F1 = Sky Color | Backspace = Toggle cursor | Esc = Back", 10, sh - 42, 9, { 140,140,160,255 });
-            
-            if (showSkyColorPicker) {
-                DrawRectangle(10, 10, 175, 200, { 40,40,40,230 });
-                DrawRectangleLinesEx({ 10, 10, 175, 200 }, 1, LIGHTGRAY);
-                DrawText("Sky Color", 18, 16, 10, LIGHTGRAY);
-                GuiColorPicker({ 18, 30, 155, 155 }, NULL, &skyColor);
-
-                if (GuiButton({ 18, 190, 80, 16 }, "Close")) {
-                    showSkyColorPicker = false;
+                    float nx = rcX + dx * spd, ny = rcY + dy * spd;
+                    if (!isSolid(nx, rcY)) rcX = nx;
+                    if (!isSolid(rcX, ny)) rcY = ny;
                 }
-            }
-            DrawFPS(sw - 80, sh - 35);
-            EndDrawing();
-        }
+                else {
+                    if (IsCursorHidden()) EnableCursor();
+                }
+
+               
+                BeginDrawing();
+
+                int half = sh / 2;
+                
+                DrawRectangle(0, 0, sw, half + (int)rcPitch, skyColor);
+                
+                DrawRectangle(0, half + (int)rcPitch, sw, sh - (half + (int)rcPitch),
+                    { (uint8_t)((skyColor.r >> 1)), (uint8_t)((skyColor.g >> 1)), (uint8_t)((skyColor.b >> 1)), 255 });
+
+
+                for (int col = 0; col < sw; col++) {
+                    float rayA = rcAngle + atanf((col - sw * 0.5f) / (sw / (2.0f * tanf(rcFOV * 0.5f))));
+                    float sinA = sinf(rayA), cosA = cosf(rayA);
+
+                    float rx = rcX, ry = rcY;
+                    float deltaDistX = (fabsf(cosA) < 1e-6f) ? 1e30f : fabsf(1.0f / cosA);
+                    float deltaDistY = (fabsf(sinA) < 1e-6f) ? 1e30f : fabsf(1.0f / sinA);
+
+                    int mapX = (int)floorf(rx), mapY = (int)floorf(ry);
+                    int stepX, stepY;
+                    float sideDistX, sideDistY;
+
+                    if (cosA < 0) { stepX = -1; sideDistX = (rx - mapX) * deltaDistX; }
+                    else { stepX = 1; sideDistX = (mapX + 1.0f - rx) * deltaDistX; }
+                    if (sinA < 0) { stepY = -1; sideDistY = (ry - mapY) * deltaDistY; }
+                    else { stepY = 1; sideDistY = (mapY + 1.0f - ry) * deltaDistY; }
+
+                    bool hit = false; int side = 0;
+                    float dist = 0;
+                    Color wallColor = GRAY;
+                    float wallH = 1.0f;
+                    bool wallSolid = false;
+                    int maxSteps = map.width + map.height + 10;
+
+                    for (int step = 0; step < maxSteps && !hit; step++) {
+                        if (sideDistX < sideDistY) { sideDistX += deltaDistX; mapX += stepX; side = 0; }
+                        else { sideDistY += deltaDistY; mapY += stepY; side = 1; }
+
+                        int ax = mapX + map.offsetX, ay = mapY + map.offsetY;
+                        if (ax < 0 || ax >= map.width || ay < 0 || ay >= map.height) { dist = 30.0f; break; }
+                        if (map.data[ax][ay].height > 0.0f) {
+                            hit = true;
+                            wallColor = map.data[ax][ay].color;
+                            wallH = map.data[ax][ay].height;
+                            wallSolid = map.data[ax][ay].solid;
+                            dist = (side == 0)
+                                ? (mapX - rx + (1 - stepX) * 0.5f) / cosA
+                                : (mapY - ry + (1 - stepY) * 0.5f) / sinA;
+                            if (dist < 0) dist = 0.001f;
+                        }
+                    }
+
+                    if (!hit) continue;
+
+                    float corrDist = dist * cosf(rayA - rcAngle);
+                    if (corrDist < 0.001f) corrDist = 0.001f;
+
+                    float baseH = (float)sh / corrDist;
+                    float drawH = baseH * wallH;
+
+                    float wallCenter = half + rcPitch;
+                    int drawTop = (int)(wallCenter - drawH * 0.5f);
+                    int drawBottom = (int)(wallCenter + drawH * 0.5f);
+
+                    float shade = 1.0f / (1.0f + corrDist * 0.18f);
+                    if (side == 1) shade *= 0.65f;
+                    shade = Clamp(shade, 0.05f, 1.0f);
+
+                    Color c = {
+                        (uint8_t)(wallColor.r * shade),
+                        (uint8_t)(wallColor.g * shade),
+                        (uint8_t)(wallColor.b * shade),
+                        255
+                    };
+                    DrawLine(col, drawTop, col, drawBottom, c);
+
+                    if (wallSolid) {
+                        Color sc = { 255, 80, 80, 180 };
+                        DrawPixel(col, drawTop, sc);
+                        DrawPixel(col, drawBottom, sc);
+                    }
+                }
+
+                DrawRectangle(0, sh - 50, sw, 50, { 35,35,35,200 });
+                float cx2 = (float)sw / 2;
+                if (GuiButton({ cx2 - 110, (float)sh - 40, 100, 30 }, "EDITOR")) { currentScene = SCENE_WHITE; EnableCursor(); cursorLocked = true; }
+                if (GuiButton({ cx2 + 10,  (float)sh - 40, 100, 30 }, "MAP"))    currentScene = SCENE_BLUE;
+                DrawText("F1=Sky | Backspace=cursor | Esc=back | WASD=move | mouse=look",
+                    10, sh - 42, 9, { 140,140,160,255 });
+
+                if (showSkyColorPicker) {
+                    DrawRectangle(10, 10, 175, 200, { 40,40,40,230 });
+                    DrawRectangleLinesEx({ 10, 10, 175, 200 }, 1, LIGHTGRAY);
+                    DrawText("Sky Color", 18, 16, 10, LIGHTGRAY);
+                    GuiColorPicker({ 18, 30, 155, 155 }, NULL, &skyColor);
+                    if (GuiButton({ 18, 190, 80, 16 }, "Close")) showSkyColorPicker = false;
+                }
+                DrawFPS(sw - 80, sh - 35);
+                EndDrawing();
+                }
     }
-    if (sel.cells) free(sel.cells);
-    if (sel.srcX)  free(sel.srcX);
-    if (sel.srcY)  free(sel.srcY);
+    if (sel.cells) { 
+        free(sel.cells);
+    };
+
+    if (sel.srcX) {
+        free(sel.srcX);
+    };
+
+    if (sel.srcY) {
+        free(sel.srcY);
+    };
+
     FreeClipboard(&clipboard);
     FreeSelectionGrid(&selGrid);
     FreeDynamicMap(&map);
