@@ -782,7 +782,7 @@ int main() {
 
     bool showNewConfirm = false;
     Color brushColor = { 200, 200, 200, 255 };
-    bool brushSolid = false;
+    bool brushSolid = true;
 
     bool shapeFirstClick = false;
     int shapeStartLX = 0;
@@ -848,7 +848,7 @@ int main() {
             if (menu.active) {
                 float mw = 0, mh = 0;
                 if (menu.editMode == 1) { mw = 165; mh = 230; }
-                else if (menu.editMode == 0) { mw = 130; mh = 185; }
+                else if (menu.editMode == 0) { mw = 130; mh = 210; }
                 else if (menu.editMode == 2) { mw = 130; mh = 140; }
                 else if (menu.editMode == 3) { mw = 130; mh = 80; }
                 else if (menu.editMode == 4) { mw = 160; mh = 80; }
@@ -1132,6 +1132,7 @@ int main() {
                         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
                             map.data[ax][ay].height = 2.5f;
                             map.data[ax][ay].color = brushColor;
+                            map.data[ax][ay].solid = brushSolid;
                         }
                     }
                     else {
@@ -1223,13 +1224,14 @@ int main() {
                             }
                             else {
                                 DrawRectangleRec(r, map.data[ax][ay].color);
-                                if (map.data[ax][ay].solid) {
+                                if (!map.data[ax][ay].solid) {
                                     DrawRectangleLinesEx(r, 2.0f / camera2D.zoom, { 255, 80, 80, 200 });
                                 }
                                 else {
-                                    float x1 = r.x, y1 = r.y, x2 = r.x + r.width, y2 = r.y + r.height;
-                                    DrawLine((int)x1, (int)y1, (int)x2, (int)y2, { 255, 200, 50, 80 });
-                                    DrawLine((int)x2, (int)y1, (int)x1, (int)y2, { 255, 200, 50, 80 });
+                                    DrawRectangleRec(r, map.data[ax][ay].color);
+                                    if (!map.data[ax][ay].solid) {
+                                        DrawRectangleLinesEx(r, 2.0f / camera2D.zoom, { 255, 80, 80, 200 });
+                                    }
                                 }
                             }
                         }
@@ -1625,23 +1627,36 @@ int main() {
 
                     if (menu.editMode == 0) {
                         DrawText(TextFormat("[%d,%d]", menu.targetX - map.offsetX, menu.targetY - map.offsetY), mx2 + 10, my2 + 8, 10, SKYBLUE);
-                        DrawText(tc.solid ? "COL: ON" : "COL: OFF", mx2 + 10, my2 + 22, 9, tc.solid ? Color{ 255,80,80,255 } : Color{ 120,120,120,255 });
-                        const char* texLabel = (tc.textureIndex >= 0 && tc.textureIndex < gTextureCount)
-                            ? TextFormat("TEX: %s", GetFileName(gTextures[tc.textureIndex].path))
-                            : "TEX: none";
-                        DrawText(texLabel, mx2 + 10, my2 + 33, 9, tc.textureIndex >= 0 ? Color{ 80,220,80,255 } : Color{ 120,120,120,255 });
-                        if (GuiButton({ mx2 + 10, my2 + 48,  110, 25 }, "Color"))     menu.editMode = 1;
-                        if (GuiButton({ mx2 + 10, my2 + 78,  110, 25 }, "Type"))      menu.editMode = 2;
-                        if (GuiButton({ mx2 + 10, my2 + 108, 110, 25 }, "Collision")) menu.editMode = 4;
-                        if (GuiButton({ mx2 + 10, my2 + 138, 110, 25 }, "Texture"))   menu.editMode = 3;
-                        if (GuiButton({ mx2 + 10, my2 + 175, 110, 20 }, "Close"))     menu.active = false;
-                    }
-                    else if (menu.editMode == 2) {
-                        DrawText("Select Type", mx2 + 10, my2 + 8, 10, GRAY);
-                        if (GuiButton({ mx2 + 10, my2 + 25,  110, 25 }, "BLOCK")) { tc.type = TYPE_BLOCK;        menu.editMode = 0; }
-                        if (GuiButton({ mx2 + 10, my2 + 55,  110, 25 }, "DECOR")) { tc.type = TYPE_DECOR;        menu.editMode = 0; }
-                        if (GuiButton({ mx2 + 10, my2 + 85,  110, 25 }, "TEX_ONLY")) { tc.type = TYPE_TEXTURE_ONLY; menu.editMode = 0; }
-                        if (GuiButton({ mx2 + 10, my2 + 115, 110, 20 }, "Back"))       menu.editMode = 0;
+
+                        bool cellExists = (tc.color.r != 80 || tc.color.g != 80 || tc.color.b != 80 || tc.textureIndex >= 0);
+                        bool cellVisible = tc.height > 0.0f;
+
+                        if (!cellExists) {
+                            DrawText("EMPTY CELL", mx2 + 10, my2 + 24, 9, { 120,120,120,255 });
+                            if (GuiButton({ mx2 + 10, my2 + 44, 110, 25 }, "Set Texture")) menu.editMode = 3;
+                            if (GuiButton({ mx2 + 10, my2 + 74, 110, 20 }, "Close"))   menu.active = false;
+                        }
+                        else if (!cellVisible) {
+                            DrawText("HIDDEN", mx2 + 10, my2 + 22, 9, { 180,180,80,255 });
+                            const char* texLabel = (tc.textureIndex >= 0 && tc.textureIndex < gTextureCount)
+                                ? TextFormat("TEX: %s", GetFileName(gTextures[tc.textureIndex].path))
+                                : "TEX: none";
+                            DrawText(texLabel, mx2 + 10, my2 + 33, 9, tc.textureIndex >= 0 ? Color{ 80,220,80,255 } : Color{ 120,120,120,255 });
+                            if (GuiButton({ mx2 + 10, my2 + 48,  110, 25 }, "Texture"))   menu.editMode = 3;
+                            if (GuiButton({ mx2 + 10, my2 + 78,  110, 20 }, "Close"))     menu.active = false;
+                        }
+                        else {
+                            DrawText("VISIBLE", mx2 + 10, my2 + 22, 9, { 80,220,80,255 });
+                            DrawText(tc.solid ? "COLLISION: ON" : "COLLISION: OFF", mx2 + 10, my2 + 33, 9, tc.solid ? Color{ 120,120,120,255 } : Color{ 255,80,80,255 });
+                            const char* texLabel = (tc.textureIndex >= 0 && tc.textureIndex < gTextureCount)
+                                ? TextFormat("TEX: %s", GetFileName(gTextures[tc.textureIndex].path))
+                                : "TEX: none";
+                            DrawText(texLabel, mx2 + 10, my2 + 44, 9, tc.textureIndex >= 0 ? Color{ 80,220,80,255 } : Color{ 120,120,120,255 });
+                            if (GuiButton({ mx2 + 10, my2 + 58,  110, 25 }, "Set Color"))     menu.editMode = 1;
+                            if (GuiButton({ mx2 + 10, my2 + 88,  110, 25 }, "Set Collision")) menu.editMode = 4;
+                            if (GuiButton({ mx2 + 10, my2 + 118, 110, 25 }, "Set Texture"))   menu.editMode = 3;
+                            if (GuiButton({ mx2 + 10, my2 + 155, 110, 20 }, "Close"))     menu.active = false;
+                        }
                     }
                     else if (menu.editMode == 3) {
                         Cell& tc = map.data[menu.targetX][menu.targetY];
@@ -1663,14 +1678,14 @@ int main() {
                                 }
                             }
                         }
-                        if (GuiButton({ mx2 + 10, my2 + 65, 110, 25 }, "Clear Texture"))
+                        if (GuiButton({ mx2 + 10, my2 + 65, 110, 25 }, "Delete Texture"))
                             tc.textureIndex = -1;
                         if (GuiButton({ mx2 + 10, my2 + 95, 110, 20 }, "Back")) menu.editMode = 0;
                     }
                     else if (menu.editMode == 4) {
                         DrawText("Collision", mx2 + 10, my2 + 8, 10, { 255,80,80,255 });
                         bool isSolid = tc.solid;
-                        DrawText(isSolid ? "SOLID (on)" : "NOT SOLID", mx2 + 10, my2 + 28, 10, isSolid ? Color{ 255,80,80,255 } : LIGHTGRAY);
+                        DrawText(isSolid ? "Collision: ON" : "Collision: OFF", mx2 + 10, my2 + 28, 10, isSolid ? LIGHTGRAY : Color{ 255,80,80,255 });
                         if (GuiButton({ mx2 + 10, my2 + 44, 110, 22 }, isSolid ? "Disable" : "Enable")) tc.solid = !tc.solid;
                         if (GuiButton({ mx2 + 10, my2 + 70, 110, 18 }, "Back")) menu.editMode = 0;
                     }
@@ -1808,12 +1823,6 @@ int main() {
 
                 depthBuf[col] = corrDist;
                 DrawLine(col, drawTop, col, drawBottom, c);
-
-                if (wallSolid) {
-                    Color sc = { 255, 80, 80, 180 };
-                    DrawPixel(col, drawTop, sc);
-                    DrawPixel(col, drawBottom, sc);
-                }
             }
 
             struct BillboardEntry { float dist; int ax, ay; };
@@ -1844,7 +1853,6 @@ int main() {
                 float invDet = 1.0f / (cosf(rcAngle + 1.5708f) * sinf(rcAngle) - sinf(rcAngle + 1.5708f) * cosf(rcAngle));
                 float spriteAngle = atan2f(dy2, dx2);
                 float angleDiff = spriteAngle - rcAngle;
-
                 while (angleDiff > (float)PI) angleDiff -= 2 * (float)PI;
                 while (angleDiff < -(float)PI) angleDiff += 2 * (float)PI;
 
