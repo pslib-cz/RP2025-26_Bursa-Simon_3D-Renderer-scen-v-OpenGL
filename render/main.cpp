@@ -1075,7 +1075,7 @@ int main() {
                     }
                     else {
                         PushUndo(&undoStack, &map);
-                        Cell c = { 2.5f, brushColor, TYPE_BLOCK, false };
+                        Cell c = { 2.5f, brushColor, TYPE_BLOCK, brushSolid, -1 };
                         CommitPreview(&map, c);
                         shapeFirstClick = false;
                         ClearPreview();
