@@ -1739,6 +1739,8 @@ int main() {
                 { (uint8_t)((skyColor.r >> 1)), (uint8_t)((skyColor.g >> 1)), (uint8_t)((skyColor.b >> 1)), 255 });
 
 
+            std::vector<float> depthBuf(sw, 1e30f);
+
             for (int col = 0; col < sw; col++) {
                 float rayA = rcAngle + atanf((col - sw * 0.5f) / (sw / (2.0f * tanf(rcFOV * 0.5f))));
                 float sinA = sinf(rayA), cosA = cosf(rayA);
@@ -1803,6 +1805,8 @@ int main() {
                     (uint8_t)(wallColor.b * shade),
                     255
                 };
+
+                depthBuf[col] = corrDist;
                 DrawLine(col, drawTop, col, drawBottom, c);
 
                 if (wallSolid) {
@@ -1838,7 +1842,6 @@ int main() {
                 float dx2 = lx - rcX, dy2 = ly - rcY;
 
                 float invDet = 1.0f / (cosf(rcAngle + 1.5708f) * sinf(rcAngle) - sinf(rcAngle + 1.5708f) * cosf(rcAngle));
-
                 float spriteAngle = atan2f(dy2, dx2);
                 float angleDiff = spriteAngle - rcAngle;
 
@@ -1861,10 +1864,17 @@ int main() {
                 float drawX = screenX - spriteW * 0.5f;
                 float drawY = (sh * 0.5f) + rcPitch - spriteH * 0.5f;
 
-                DrawTexturePro(tex,
-                    { 0, 0, (float)tex.width, (float)tex.height },
-                    { drawX, drawY, spriteW, spriteH },
-                    { 0, 0 }, 0.0f, WHITE);
+                int colStart = (int)drawX;
+                int colEnd = (int)(drawX + spriteW);
+                for (int sc = colStart; sc < colEnd; sc++) {
+                    if (sc < 0 || sc >= sw) continue;
+                    if (corrDist >= depthBuf[sc]) continue;
+                    float u = (float)(sc - colStart) / spriteW;
+                    DrawTexturePro(tex,
+                        { u * tex.width, 0, 1.0f, (float)tex.height },
+                        { (float)sc, drawY, 1.0f, spriteH },
+                        { 0, 0 }, 0.0f, WHITE);
+                }
             }
 
             DrawRectangle(0, sh - 50, sw, 50, { 35,35,35,200 });
