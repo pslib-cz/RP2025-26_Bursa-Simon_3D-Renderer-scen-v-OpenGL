@@ -355,17 +355,39 @@ void RotateSelectionCW(DynamicMap* map, SelectionGrid* sg, SelectionState* sel) 
     }
     free(tmp); free(nxArr); free(nyArr);
 }
+
+static bool IsCellDefault(const Cell* c) {
+    return c->height == 0.0f
+        && c->color.r == DARKGRAY.r && c->color.g == DARKGRAY.g
+        && c->color.b == DARKGRAY.b && c->color.a == DARKGRAY.a
+        && c->type == TYPE_BLOCK
+        && c->solid == false
+        && c->textureIndex == -1;
+}
+
 bool SaveMap(const char* path, const DynamicMap* m) {
     FILE* f = fopen(path, "wb");
     if (!f) return false;
+
+    int cellCount = 0;
+    for (int x = 0; x < m->width; x++)
+        for (int y = 0; y < m->height; y++)
+            if (!IsCellDefault(&m->data[x][y])) cellCount++;
+
     fwrite(MAP_MAGIC, 1, 4, f);
     int ver = MAP_VERSION;
     fwrite(&ver, sizeof(int), 1, f);
-    fwrite(&m->width, sizeof(int), 1, f); fwrite(&m->height, sizeof(int), 1, f);
-    fwrite(&m->offsetX, sizeof(int), 1, f); fwrite(&m->offsetY, sizeof(int), 1, f);
-    for (int x = 0; x < m->width; x++)
+    fwrite(&m->offsetX, sizeof(int), 1, f);
+    fwrite(&m->offsetY, sizeof(int), 1, f);
+    fwrite(&cellCount, sizeof(int), 1, f);
+
+    for (int x = 0; x < m->width; x++) {
         for (int y = 0; y < m->height; y++) {
             const Cell* c = &m->data[x][y];
+            if (IsCellDefault(c)) continue;
+            int lx = x - m->offsetX, ly = y - m->offsetY;
+            fwrite(&lx, sizeof(int), 1, f);
+            fwrite(&ly, sizeof(int), 1, f);
             fwrite(&c->height, sizeof(float), 1, f);
             uint8_t rgba[4] = { c->color.r, c->color.g, c->color.b, c->color.a };
             fwrite(rgba, 1, 4, f);
@@ -373,35 +395,76 @@ bool SaveMap(const char* path, const DynamicMap* m) {
             fwrite(&c->solid, sizeof(bool), 1, f);
             fwrite(&c->textureIndex, sizeof(int), 1, f);
         }
+    }
     fclose(f); return true;
 }
+
 DynamicMap LoadMap(const char* path, bool* ok) {
     *ok = false; DynamicMap m = { nullptr, 0, 0, 0, 0 };
     FILE* f = fopen(path, "rb"); if (!f) return m;
+
     char magic[4]; fread(magic, 1, 4, f);
     if (memcmp(magic, MAP_MAGIC, 4) != 0) { fclose(f); return m; }
     int ver; fread(&ver, sizeof(int), 1, f);
     if (ver != MAP_VERSION) { fclose(f); return m; }
-    int w, h, ox, oy;
-    fread(&w, sizeof(int), 1, f); fread(&h, sizeof(int), 1, f);
-    fread(&ox, sizeof(int), 1, f); fread(&oy, sizeof(int), 1, f);
-    if (w <= 0 || h <= 0 || w > 100000 || h > 100000) { fclose(f); return m; }
-    m.width = w; m.height = h; m.offsetX = ox; m.offsetY = oy;
-    m.data = (Cell**)malloc(w * sizeof(Cell*));
-    for (int x = 0; x < w; x++) {
-        m.data[x] = (Cell*)malloc(h * sizeof(Cell));
-        for (int y = 0; y < h; y++) {
-            Cell c;
-            fread(&c.height, sizeof(float), 1, f);
-            uint8_t rgba[4]; fread(rgba, 1, 4, f);
-            c.color = { rgba[0], rgba[1], rgba[2], rgba[3] };
-            int t; fread(&t, sizeof(int), 1, f); c.type = (CellType)t;
-            if (fread(&c.solid, sizeof(bool), 1, f) != 1) c.solid = false;
-            if (fread(&c.textureIndex, sizeof(int), 1, f) != 1) c.textureIndex = -1;
-            m.data[x][y] = c;
+
+    int ox, oy, cellCount;
+    fread(&ox, sizeof(int), 1, f);
+    fread(&oy, sizeof(int), 1, f);
+    fread(&cellCount, sizeof(int), 1, f);
+    if (cellCount < 0 || cellCount > 10000000) { fclose(f); return m; }
+
+    struct SavedCell { int lx, ly; Cell cell; };
+    SavedCell* tmp = (SavedCell*)malloc(cellCount * sizeof(SavedCell));
+    if (!tmp && cellCount > 0) { fclose(f); return m; }
+
+    int minLX = 0, minLY = 0, maxLX = 0, maxLY = 0;
+    bool first = true;
+    for (int i = 0; i < cellCount; i++) {
+        fread(&tmp[i].lx, sizeof(int), 1, f);
+        fread(&tmp[i].ly, sizeof(int), 1, f);
+        fread(&tmp[i].cell.height, sizeof(float), 1, f);
+        uint8_t rgba[4]; fread(rgba, 1, 4, f);
+        tmp[i].cell.color = { rgba[0], rgba[1], rgba[2], rgba[3] };
+        int t; fread(&t, sizeof(int), 1, f); tmp[i].cell.type = (CellType)t;
+        if (fread(&tmp[i].cell.solid, sizeof(bool), 1, f) != 1) tmp[i].cell.solid = false;
+        if (fread(&tmp[i].cell.textureIndex, sizeof(int), 1, f) != 1) tmp[i].cell.textureIndex = -1;
+        if (first) { minLX = maxLX = tmp[i].lx; minLY = maxLY = tmp[i].ly; first = false; }
+        else {
+            if (tmp[i].lx < minLX) minLX = tmp[i].lx; if (tmp[i].lx > maxLX) maxLX = tmp[i].lx;
+            if (tmp[i].ly < minLY) minLY = tmp[i].ly; if (tmp[i].ly > maxLY) maxLY = tmp[i].ly;
         }
     }
-    fclose(f); *ok = true; return m;
+    fclose(f);
+
+    const int PAD = 25;
+    int newW, newH, newOX, newOY;
+    if (cellCount == 0) {
+        newW = 50; newH = 50; newOX = 25; newOY = 25;
+    }
+    else {
+        newOX = -minLX + PAD; newOY = -minLY + PAD;
+        newW = (maxLX - minLX + 1) + PAD * 2;
+        newH = (maxLY - minLY + 1) + PAD * 2;
+        if (newW < 50) { newOX += (50 - newW) / 2; newW = 50; }
+        if (newH < 50) { newOY += (50 - newH) / 2; newH = 50; }
+    }
+
+    m.width = newW; m.height = newH; m.offsetX = newOX; m.offsetY = newOY;
+    m.data = (Cell**)malloc(newW * sizeof(Cell*));
+    if (!m.data) { free(tmp); return m; }
+    for (int x = 0; x < newW; x++) {
+        m.data[x] = (Cell*)malloc(newH * sizeof(Cell));
+        for (int y = 0; y < newH; y++)
+            m.data[x][y] = Cell{ 0.0f, DARKGRAY, TYPE_BLOCK, false, -1 };
+    }
+    for (int i = 0; i < cellCount; i++) {
+        int ax = tmp[i].lx + newOX, ay = tmp[i].ly + newOY;
+        if (ax >= 0 && ax < newW && ay >= 0 && ay < newH)
+            m.data[ax][ay] = tmp[i].cell;
+    }
+    free(tmp);
+    *ok = true; return m;
 }
 
 void FreeDynamicMap(DynamicMap* m) {
@@ -819,9 +882,10 @@ int main() {
 
     bool isDragging = false;
     bool strokeStarted = false;
-    char saveFile[256] = "map.bin";
     bool editingFilename = false;
-    int  fileLen = (int)strlen(saveFile);
+
+    char saveFile[256] = "map.bin";
+    int fileLen = (int)strlen(saveFile);
 
     while (!WindowShouldClose()) {
         float dt = GetFrameTime();
@@ -1400,11 +1464,30 @@ int main() {
             DrawRectangle(0, 46, 160, sh - 96, { 30, 30, 30, 200 });
             DrawLine(160, 46, 160, sh - 50, { 80, 80, 80, 200 });
             Color boxBorder = editingFilename ? Color{ 0,200,255,255 } : Color{ 80,80,80,255 };
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(mousePos, fileInputRect))
+                editingFilename = true;
+            else if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !CheckCollisionPointRec(mousePos, fileInputRect))
+                editingFilename = false;
+
+            if (editingFilename) {
+                int key;
+                while ((key = GetCharPressed()) > 0) {
+                    int len = (int)strlen(saveFile);
+                    if (len < 255) { saveFile[len] = (char)key; saveFile[len + 1] = '\0'; }
+                }
+                if (IsKeyPressed(KEY_BACKSPACE)) {
+                    int len = (int)strlen(saveFile);
+                    if (len > 0) saveFile[--len] = '\0';
+                }
+                if (IsKeyPressed(KEY_ENTER)) editingFilename = false;
+            }
+
             DrawRectangleLinesEx(fileInputRect, 1, boxBorder);
             DrawText(saveFile, (int)fileInputRect.x + 3, (int)fileInputRect.y + 4, 9, LIGHTGRAY);
             if (editingFilename && ((int)(GetTime() * 2) % 2 == 0)) {
                 int cx2 = (int)fileInputRect.x + 3 + MeasureText(saveFile, 9);
-                if (cx2 < (int)(fileInputRect.x + fileInputRect.width - 2)) DrawLine(cx2, (int)fileInputRect.y + 2, cx2, (int)fileInputRect.y + 15, { 0,200,255,255 });
+                if (cx2 < (int)(fileInputRect.x + fileInputRect.width - 2))
+                    DrawLine(cx2, (int)fileInputRect.y + 2, cx2, (int)fileInputRect.y + 15, { 0,200,255,255 });
             }
             int sby = 72;
 
