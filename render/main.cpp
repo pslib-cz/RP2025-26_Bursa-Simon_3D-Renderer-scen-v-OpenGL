@@ -984,34 +984,74 @@ int main() {
                 if (IsKeyPressed(KEY_R) && toolMode == TOOL_SELECT) {
                     if (pasteMode) {
                         RotateClipboardCW(&clipboard);
-                        SetStatus(&status, "Rotated clipboard CW", { 255,200,0,255 });
+                        SetStatus(&status, "Rotated clipboard", { 255,200,0,255 });
                     }
                     else if (sel.count > 0) {
                         PushUndo(&undoStack, &map);
                         RotateSelectionCW(&map, &selGrid, &sel);
                         RebuildSelectionList(&selGrid, &map, &sel);
-                        SetStatus(&status, "Rotated selection CW", { 255,200,0,255 });
+                        SetStatus(&status, "Rotated selection", { 255,200,0,255 });
                     }
                 }
 
                 if (ctrl && IsKeyPressed(KEY_LEFT) && toolMode == TOOL_SELECT && sel.count > 0) {
-                    if (clipboard.count == 0 || sel.count > 0) {
-                        CopySelection(&clipboard, &sel, &map);
-                        MirrorClipboardX(&clipboard);
-                        PasteClipboard(&clipboard, &map, &selGrid, &sel, sel.srcX[0] - map.offsetX - clipboard.boundsW + 1, sel.srcY[0] - map.offsetY);
-                        RebuildSelectionList(&selGrid, &map, &sel);
-                        FreeClipboard(&clipboard);
-                        SetStatus(&status, "Mirrored X", { 255,200,0,255 });
+                    CopySelection(&clipboard, &sel, &map);
+                    MirrorClipboardX(&clipboard);
+                    int minLX = sel.srcX[0] - map.offsetX;
+                    int minLY = sel.srcY[0] - map.offsetY;
+                    for (int i = 1; i < sel.count; i++) {
+                        if (sel.srcX[i] - map.offsetX < minLX) minLX = sel.srcX[i] - map.offsetX;
+                        if (sel.srcY[i] - map.offsetY < minLY) minLY = sel.srcY[i] - map.offsetY;
                     }
+                    PasteClipboard(&clipboard, &map, &selGrid, &sel, minLX - clipboard.boundsW, minLY);
+                    RebuildSelectionList(&selGrid, &map, &sel);
+                    FreeClipboard(&clipboard);
+                    SetStatus(&status, "Mirrored to the left", { 255,200,0,255 });
                 }
 
                 if (ctrl && IsKeyPressed(KEY_RIGHT) && toolMode == TOOL_SELECT && sel.count > 0) {
                     CopySelection(&clipboard, &sel, &map);
-                    MirrorClipboardY(&clipboard);
-                    PasteClipboard(&clipboard, &map, &selGrid, &sel, sel.srcX[0] - map.offsetX, sel.srcY[0] - map.offsetY - clipboard.boundsH + 1);
+                    MirrorClipboardX(&clipboard);
+                    int minLY = sel.srcY[0] - map.offsetY;
+                    int maxLX = sel.srcX[0] - map.offsetX;
+                    for (int i = 1; i < sel.count; i++) {
+                        if (sel.srcX[i] - map.offsetX > maxLX) maxLX = sel.srcX[i] - map.offsetX;
+                        if (sel.srcY[i] - map.offsetY < minLY) minLY = sel.srcY[i] - map.offsetY;
+                    }
+                    PasteClipboard(&clipboard, &map, &selGrid, &sel, maxLX + 1, minLY);
                     RebuildSelectionList(&selGrid, &map, &sel);
                     FreeClipboard(&clipboard);
-                    SetStatus(&status, "Mirrored Y", { 255,200,0,255 });
+                    SetStatus(&status, "Mirrored to the right", { 255,200,0,255 });
+                }
+
+                if (ctrl && IsKeyPressed(KEY_UP) && toolMode == TOOL_SELECT && sel.count > 0) {
+                    CopySelection(&clipboard, &sel, &map);
+                    MirrorClipboardY(&clipboard);
+                    int minLX = sel.srcX[0] - map.offsetX;
+                    int minLY = sel.srcY[0] - map.offsetY;
+                    for (int i = 1; i < sel.count; i++) {
+                        if (sel.srcX[i] - map.offsetX < minLX) minLX = sel.srcX[i] - map.offsetX;
+                        if (sel.srcY[i] - map.offsetY < minLY) minLY = sel.srcY[i] - map.offsetY;
+                    }
+                    PasteClipboard(&clipboard, &map, &selGrid, &sel, minLX, minLY - clipboard.boundsH);
+                    RebuildSelectionList(&selGrid, &map, &sel);
+                    FreeClipboard(&clipboard);
+                    SetStatus(&status, "Mirror up", { 255,200,0,255 });
+                }
+
+                if (ctrl && IsKeyPressed(KEY_DOWN) && toolMode == TOOL_SELECT && sel.count > 0) {
+                    CopySelection(&clipboard, &sel, &map);
+                    MirrorClipboardY(&clipboard);
+                    int minLX = sel.srcX[0] - map.offsetX;
+                    int maxLY = sel.srcY[0] - map.offsetY;
+                    for (int i = 1; i < sel.count; i++) {
+                        if (sel.srcX[i] - map.offsetX < minLX) minLX = sel.srcX[i] - map.offsetX;
+                        if (sel.srcY[i] - map.offsetY > maxLY) maxLY = sel.srcY[i] - map.offsetY;
+                    }
+                    PasteClipboard(&clipboard, &map, &selGrid, &sel, minLX, maxLY + 1);
+                    RebuildSelectionList(&selGrid, &map, &sel);
+                    FreeClipboard(&clipboard);
+                    SetStatus(&status, "Mirror down", { 255,200,0,255 });
                 }
             }
 
@@ -1019,6 +1059,39 @@ int main() {
                 if (IsKeyPressed(KEY_ESCAPE)) {
                     showNewConfirm = false;
                 }
+            }
+
+            if (IsKeyPressed(KEY_B)) {
+                toolMode = (toolMode == TOOL_BRUSH) ? TOOL_NONE : TOOL_BRUSH;
+                if (toolMode != TOOL_SELECT) { ClearSelection(&selGrid, &sel); shapeFirstClick = false; ClearPreview(); }
+                SetStatus(&status, toolMode == TOOL_BRUSH ? "Brush" : "No tool", LIGHTGRAY);
+            }
+            if (IsKeyPressed(KEY_E)) {
+                toolMode = (toolMode == TOOL_ERASER) ? TOOL_NONE : TOOL_ERASER;
+                if (toolMode != TOOL_SELECT) { ClearSelection(&selGrid, &sel); shapeFirstClick = false; ClearPreview(); }
+                SetStatus(&status, toolMode == TOOL_ERASER ? "Eraser" : "No tool", LIGHTGRAY);
+            }
+            if (IsKeyPressed(KEY_S) && !ctrl) {
+                toolMode = (toolMode == TOOL_SELECT) ? TOOL_NONE : TOOL_SELECT;
+                if (toolMode != TOOL_SELECT) { ClearSelection(&selGrid, &sel); pasteMode = false; }
+                shapeFirstClick = false; ClearPreview();
+                SetStatus(&status, toolMode == TOOL_SELECT ? "Select" : "No tool", LIGHTGRAY);
+            }
+            if (IsKeyPressed(KEY_L)) {
+                toolMode = (toolMode == TOOL_LINE) ? TOOL_NONE : TOOL_LINE;
+                if (toolMode != TOOL_SELECT) { ClearSelection(&selGrid, &sel); shapeFirstClick = false; ClearPreview(); }
+                SetStatus(&status, toolMode == TOOL_LINE ? "Line" : "No tool", LIGHTGRAY);
+            }
+
+            if (IsKeyPressed(KEY_R) && toolMode != TOOL_SELECT) {
+                toolMode = (toolMode == TOOL_RECT) ? TOOL_NONE : TOOL_RECT;
+                if (toolMode != TOOL_SELECT) { ClearSelection(&selGrid, &sel); shapeFirstClick = false; ClearPreview(); }
+                SetStatus(&status, toolMode == TOOL_RECT ? "Rectangle" : "No tool", LIGHTGRAY);
+            }
+            if (IsKeyPressed(KEY_C) && !ctrl) {
+                toolMode = (toolMode == TOOL_CIRCLE) ? TOOL_NONE : TOOL_CIRCLE;
+                if (toolMode != TOOL_SELECT) { ClearSelection(&selGrid, &sel); shapeFirstClick = false; ClearPreview(); }
+                SetStatus(&status, toolMode == TOOL_CIRCLE ? "Circle" : "No tool", LIGHTGRAY);
             }
 
             else if (toolMode == TOOL_SELECT && !mouseOnUI) {
@@ -1141,7 +1214,8 @@ int main() {
                         PushUndo(&undoStack, &map);
                         Cell c = { 2.5f, brushColor, TYPE_BLOCK, brushSolid, -1 };
                         CommitPreview(&map, c);
-                        shapeFirstClick = false;
+                        shapeStartLX = logicX;
+                        shapeStartLY = logicY;
                         ClearPreview();
                     }
                 }
@@ -1574,7 +1648,7 @@ int main() {
                 DrawLine(0, panelTop, 160, panelTop, { 80,80,80,200 });
                 DrawText("Brush Color", 8, panelTop + 4, 9, { 160,160,200,255 });
                 int py = panelTop + 16;
-                Rectangle cpRect = { 8, (float)py, 144, 144 };
+                Rectangle cpRect = { 8, (float)py, 120, 144 };
                 Color newC = brushColor;
                 GuiColorPicker(cpRect, NULL, &newC);
                 if (newC.r != brushColor.r || newC.g != brushColor.g || newC.b != brushColor.b) {
