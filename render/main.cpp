@@ -16,7 +16,7 @@ typedef enum { MIRROR_NONE = 0, MIRROR_X, MIRROR_Y, MIRROR_BOTH } MirrorMode;
 #define CELL_BASE_SIZE 40.0f
 #define MAX_UNZOOM 0.1f
 #define MAX_ZOOM   3.0f
-#define UNDO_MAX   64
+#define UNDO_MAX   128
 
 #include <vector>
 #include <algorithm>
@@ -93,10 +93,6 @@ typedef struct {
     int    width, height, offsetX, offsetY;
 } MapSnapshot;
 
-typedef struct {
-    MapSnapshot snapshots[UNDO_MAX];
-    int         count, current;
-} UndoStack;
 
 typedef struct {
     char text[128];
@@ -166,59 +162,58 @@ void RestoreSnapshot(DynamicMap* m, const MapSnapshot* s) {
     }
 }
 
-void PushUndo(UndoStack* us, const DynamicMap* m) {
-    for (int i = us->current + 1; i < us->count; i++) {
-        FreeSnapshot(&us->snapshots[i]);
-    };
+#define UNDO_MAX 128
 
-    us->count = us->current + 1;
+struct UndoStack {
+    MapSnapshot history[UNDO_MAX];
+    int count = 0;
+    int current = -1;
+};
 
-    if (us->count >= UNDO_MAX) {
-        FreeSnapshot(&us->snapshots[0]);
-        for (int i = 0; i < UNDO_MAX - 1; i++) {
-            us->snapshots[i] = us->snapshots[i + 1];
-        }
-
-        us->snapshots[UNDO_MAX - 1].data = nullptr;
-        us->count = UNDO_MAX - 1; us->current = us->count - 1;
-    }
-    us->snapshots[us->count] = SnapshotMap(m);
-    us->current = us->count; us->count++;
-}
-
-bool UndoStep(UndoStack* us, DynamicMap* m) {
-    if (us->current <= 0) {
-        return false;
-    }
-
-    us->current--;
-    RestoreSnapshot(m, &us->snapshots[us->current]);
-    return true;
-}
-bool RedoStep(UndoStack* us, DynamicMap* m) {
-    if (us->current >= us->count - 1) {
-        return false;
-    }
-
-    us->current++;
-
-    RestoreSnapshot(m, &us->snapshots[us->current]);
-    return true;
-}
 void InitUndoStack(UndoStack* us) {
-    memset(us->snapshots, 0, sizeof(us->snapshots));
+    memset(us->history, 0, sizeof(us->history));
     us->count = 0;
     us->current = -1;
 }
 
-
 void ClearUndoStack(UndoStack* us) {
-    for (int i = 0; i < us->count; i++) {
-        FreeSnapshot(&us->snapshots[i]);
-        us->count = 0;
-        us->current = -1;
-    }
+    for (int i = 0; i < us->count; i++)
+        FreeSnapshot(&us->history[i]);
+    us->count = 0;
+    us->current = -1;
 }
+
+void PushUndo(UndoStack* us, const DynamicMap* m) {
+    for (int i = us->current + 1; i < us->count; i++)
+        FreeSnapshot(&us->history[i]);
+    us->count = us->current + 1;
+
+    if (us->count >= UNDO_MAX) {
+        FreeSnapshot(&us->history[0]);
+        memmove(&us->history[0], &us->history[1], (UNDO_MAX - 1) * sizeof(MapSnapshot));
+        us->count--;
+        us->current--;
+    }
+
+    us->history[us->count] = SnapshotMap(m);
+    us->current = us->count;
+    us->count++;
+}
+
+bool UndoStep(UndoStack* us, DynamicMap* m) {
+    if (us->current <= 0) return false;
+    us->current--;
+    RestoreSnapshot(m, &us->history[us->current]);
+    return true;
+}
+
+bool RedoStep(UndoStack* us, DynamicMap* m) {
+    if (us->current >= us->count - 1) return false;
+    us->current++;
+    RestoreSnapshot(m, &us->history[us->current]);
+    return true;
+}
+
 void FreeClipboard(Clipboard* cb) {
     free(cb->cells);
     cb->cells = nullptr;
@@ -658,6 +653,42 @@ void DrawLine2DMap(DynamicMap* map, int x0, int y0, int x1, int y1, Cell cell, b
     }
 }
 
+void EnsureMapContainsLogicRect(DynamicMap* map, SelectionGrid* selectionGrid,
+    int logicLeft, int logicTop, int logicRight, int logicBottom)
+{
+    const int EXPAND_PADDING = 5;
+
+    int extraShiftX = 0;
+    int extraShiftY = 0;
+    int newWidth = map->width;
+    int newHeight = map->height;
+
+    int arrayLeft = logicLeft + map->offsetX;
+    int arrayTop = logicTop + map->offsetY;
+    int arrayRight = logicRight + map->offsetX;
+    int arrayBottom = logicBottom + map->offsetY;
+
+    if (arrayLeft < EXPAND_PADDING) {
+        extraShiftX = EXPAND_PADDING - arrayLeft;
+        newWidth += extraShiftX;
+    }
+    if (arrayTop < EXPAND_PADDING) {
+        extraShiftY = EXPAND_PADDING - arrayTop;
+        newHeight += extraShiftY;
+    }
+    if (arrayRight + EXPAND_PADDING >= newWidth) {
+        newWidth = arrayRight + EXPAND_PADDING + 1 + extraShiftX;
+    }
+    if (arrayBottom + EXPAND_PADDING >= newHeight) {
+        newHeight = arrayBottom + EXPAND_PADDING + 1 + extraShiftY;
+    }
+
+    if (newWidth != map->width || newHeight != map->height || extraShiftX != 0 || extraShiftY != 0) {
+        ExpandMap(map, newWidth, newHeight, extraShiftX, extraShiftY);
+        ExpandSelectionGrid(selectionGrid, newWidth, newHeight, extraShiftX, extraShiftY);
+    }
+}
+
 #define MAX_PREVIEW 4096
 struct PreviewCell { int lx, ly; };
 static PreviewCell gPreview[MAX_PREVIEW];
@@ -841,7 +872,6 @@ int main() {
 
     UndoStack undoStack;
     InitUndoStack(&undoStack);
-    PushUndo(&undoStack, &map);
 
     bool showNewConfirm = false;
     Color brushColor = { 200, 200, 200, 255 };
@@ -1003,7 +1033,11 @@ int main() {
                         if (sel.srcX[i] - map.offsetX < minLX) minLX = sel.srcX[i] - map.offsetX;
                         if (sel.srcY[i] - map.offsetY < minLY) minLY = sel.srcY[i] - map.offsetY;
                     }
-                    PasteClipboard(&clipboard, &map, &selGrid, &sel, minLX - clipboard.boundsW, minLY);
+                    int destLX = minLX - clipboard.boundsW;
+                    int destLY = minLY;
+
+                    EnsureMapContainsLogicRect(&map, &selGrid, destLX, destLY, destLX + clipboard.boundsW - 1, destLY + clipboard.boundsH - 1);
+                    PasteClipboard(&clipboard, &map, &selGrid, &sel, destLX, destLY);
                     RebuildSelectionList(&selGrid, &map, &sel);
                     FreeClipboard(&clipboard);
                     SetStatus(&status, "Mirrored to the left", { 255,200,0,255 });
@@ -1018,7 +1052,12 @@ int main() {
                         if (sel.srcX[i] - map.offsetX > maxLX) maxLX = sel.srcX[i] - map.offsetX;
                         if (sel.srcY[i] - map.offsetY < minLY) minLY = sel.srcY[i] - map.offsetY;
                     }
-                    PasteClipboard(&clipboard, &map, &selGrid, &sel, maxLX + 1, minLY);
+                    int destLX = maxLX + 1;
+                    int destLY = minLY;
+                    EnsureMapContainsLogicRect(&map, &selGrid,
+                        destLX, destLY,
+                        destLX + clipboard.boundsW - 1, destLY + clipboard.boundsH - 1);
+                    PasteClipboard(&clipboard, &map, &selGrid, &sel, destLX, destLY);
                     RebuildSelectionList(&selGrid, &map, &sel);
                     FreeClipboard(&clipboard);
                     SetStatus(&status, "Mirrored to the right", { 255,200,0,255 });
@@ -1033,7 +1072,12 @@ int main() {
                         if (sel.srcX[i] - map.offsetX < minLX) minLX = sel.srcX[i] - map.offsetX;
                         if (sel.srcY[i] - map.offsetY < minLY) minLY = sel.srcY[i] - map.offsetY;
                     }
-                    PasteClipboard(&clipboard, &map, &selGrid, &sel, minLX, minLY - clipboard.boundsH);
+                    int destLX = minLX;
+                    int destLY = minLY - clipboard.boundsH;
+                    EnsureMapContainsLogicRect(&map, &selGrid,
+                        destLX, destLY,
+                        destLX + clipboard.boundsW - 1, destLY + clipboard.boundsH - 1);
+                    PasteClipboard(&clipboard, &map, &selGrid, &sel, destLX, destLY);
                     RebuildSelectionList(&selGrid, &map, &sel);
                     FreeClipboard(&clipboard);
                     SetStatus(&status, "Mirror up", { 255,200,0,255 });
@@ -1048,7 +1092,12 @@ int main() {
                         if (sel.srcX[i] - map.offsetX < minLX) minLX = sel.srcX[i] - map.offsetX;
                         if (sel.srcY[i] - map.offsetY > maxLY) maxLY = sel.srcY[i] - map.offsetY;
                     }
-                    PasteClipboard(&clipboard, &map, &selGrid, &sel, minLX, maxLY + 1);
+                    int destLX = minLX;
+                    int destLY = maxLY + 1;
+                    EnsureMapContainsLogicRect(&map, &selGrid,
+                        destLX, destLY,
+                        destLX + clipboard.boundsW - 1, destLY + clipboard.boundsH - 1);
+                    PasteClipboard(&clipboard, &map, &selGrid, &sel, destLX, destLY);
                     RebuildSelectionList(&selGrid, &map, &sel);
                     FreeClipboard(&clipboard);
                     SetStatus(&status, "Mirror down", { 255,200,0,255 });
@@ -1214,9 +1263,15 @@ int main() {
                         PushUndo(&undoStack, &map);
                         Cell c = { 2.5f, brushColor, TYPE_BLOCK, brushSolid, -1 };
                         CommitPreview(&map, c);
-                        shapeStartLX = logicX;
-                        shapeStartLY = logicY;
-                        ClearPreview();
+                        if (toolMode == TOOL_LINE) {
+                            shapeStartLX = logicX;
+                            shapeStartLY = logicY;
+                            ClearPreview();
+                        }
+                        else {
+                            shapeFirstClick = false;
+                            ClearPreview();
+                        }
                     }
                 }
                 if (IsKeyPressed(KEY_ESCAPE)) {
@@ -1274,7 +1329,7 @@ int main() {
                         }
                     }
                     else {
-                        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && !isDragging && !menu.active) {
+                        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && !isDragging && !menu.active && toolMode == TOOL_NONE) {
                             bool hasData = (map.data[ax][ay].color.r != DARKGRAY.r || map.data[ax][ay].color.g != DARKGRAY.g || map.data[ax][ay].color.b != DARKGRAY.b || map.data[ax][ay].textureIndex >= 0);
                             if (hasData) {
                                 PushUndo(&undoStack, &map);
@@ -1296,7 +1351,8 @@ int main() {
             int vx1 = (int)floor(vBR.x / CELL_BASE_SIZE);
             int vy1 = (int)floor(vBR.y / CELL_BASE_SIZE);
             int step = 20, thr = 5;
-            bool active2D = (isDragging || toolMode != TOOL_NONE);
+
+            bool active2D = (isDragging || toolMode != TOOL_NONE || wheel != 0 || IsMouseButtonDown(MOUSE_BUTTON_MIDDLE));
 
             if (active2D) {
                 if (vx0 < -map.offsetX + thr) {
