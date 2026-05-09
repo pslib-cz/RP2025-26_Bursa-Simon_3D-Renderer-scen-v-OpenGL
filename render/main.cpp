@@ -16,7 +16,7 @@ typedef enum { MIRROR_NONE = 0, MIRROR_X, MIRROR_Y, MIRROR_BOTH } MirrorMode;
 #define CELL_BASE_SIZE 40.0f
 #define MAX_UNZOOM 0.1f
 #define MAX_ZOOM   3.0f
-#define UNDO_MAX   128
+#define UNDO_MAX   64
 
 #include <vector>
 #include <algorithm>
@@ -93,6 +93,10 @@ typedef struct {
     int    width, height, offsetX, offsetY;
 } MapSnapshot;
 
+typedef struct {
+    MapSnapshot snapshots[UNDO_MAX];
+    int         count, current;
+} UndoStack;
 
 typedef struct {
     char text[128];
@@ -162,58 +166,59 @@ void RestoreSnapshot(DynamicMap* m, const MapSnapshot* s) {
     }
 }
 
-#define UNDO_MAX 128
-
-struct UndoStack {
-    MapSnapshot history[UNDO_MAX];
-    int count = 0;
-    int current = -1;
-};
-
-void InitUndoStack(UndoStack* us) {
-    memset(us->history, 0, sizeof(us->history));
-    us->count = 0;
-    us->current = -1;
-}
-
-void ClearUndoStack(UndoStack* us) {
-    for (int i = 0; i < us->count; i++)
-        FreeSnapshot(&us->history[i]);
-    us->count = 0;
-    us->current = -1;
-}
-
 void PushUndo(UndoStack* us, const DynamicMap* m) {
-    for (int i = us->current + 1; i < us->count; i++)
-        FreeSnapshot(&us->history[i]);
+    for (int i = us->current + 1; i < us->count; i++) {
+        FreeSnapshot(&us->snapshots[i]);
+    };
+
     us->count = us->current + 1;
 
     if (us->count >= UNDO_MAX) {
-        FreeSnapshot(&us->history[0]);
-        memmove(&us->history[0], &us->history[1], (UNDO_MAX - 1) * sizeof(MapSnapshot));
-        us->count--;
-        us->current--;
-    }
+        FreeSnapshot(&us->snapshots[0]);
+        for (int i = 0; i < UNDO_MAX - 1; i++) {
+            us->snapshots[i] = us->snapshots[i + 1];
+        }
 
-    us->history[us->count] = SnapshotMap(m);
-    us->current = us->count;
-    us->count++;
+        us->snapshots[UNDO_MAX - 1].data = nullptr;
+        us->count = UNDO_MAX - 1; us->current = us->count - 1;
+    }
+    us->snapshots[us->count] = SnapshotMap(m);
+    us->current = us->count; us->count++;
 }
 
 bool UndoStep(UndoStack* us, DynamicMap* m) {
-    if (us->current <= 0) return false;
+    if (us->current <= 0) {
+        return false;
+    }
+
     us->current--;
-    RestoreSnapshot(m, &us->history[us->current]);
+    RestoreSnapshot(m, &us->snapshots[us->current]);
     return true;
 }
-
 bool RedoStep(UndoStack* us, DynamicMap* m) {
-    if (us->current >= us->count - 1) return false;
+    if (us->current >= us->count - 1) {
+        return false;
+    }
+
     us->current++;
-    RestoreSnapshot(m, &us->history[us->current]);
+
+    RestoreSnapshot(m, &us->snapshots[us->current]);
     return true;
 }
+void InitUndoStack(UndoStack* us) {
+    memset(us->snapshots, 0, sizeof(us->snapshots));
+    us->count = 0;
+    us->current = -1;
+}
 
+
+void ClearUndoStack(UndoStack* us) {
+    for (int i = 0; i < us->count; i++) {
+        FreeSnapshot(&us->snapshots[i]);
+        us->count = 0;
+        us->current = -1;
+    }
+}
 void FreeClipboard(Clipboard* cb) {
     free(cb->cells);
     cb->cells = nullptr;
@@ -872,6 +877,7 @@ int main() {
 
     UndoStack undoStack;
     InitUndoStack(&undoStack);
+    PushUndo(&undoStack, &map);
 
     bool showNewConfirm = false;
     Color brushColor = { 200, 200, 200, 255 };
@@ -1329,7 +1335,7 @@ int main() {
                         }
                     }
                     else {
-                        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && !isDragging && !menu.active && toolMode == TOOL_NONE) {
+                        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && !isDragging && !menu.active) {
                             bool hasData = (map.data[ax][ay].color.r != DARKGRAY.r || map.data[ax][ay].color.g != DARKGRAY.g || map.data[ax][ay].color.b != DARKGRAY.b || map.data[ax][ay].textureIndex >= 0);
                             if (hasData) {
                                 PushUndo(&undoStack, &map);
