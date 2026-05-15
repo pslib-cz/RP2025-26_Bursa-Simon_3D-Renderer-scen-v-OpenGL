@@ -86,6 +86,7 @@ void HandleCopyPaste(EditorState* ed, DynamicMap* map, int logicX, int logicY)
         PasteClipboard(&ed->clipboard, map, &ed->selGrid, &ed->sel, logicX, logicY);
         RebuildSelectionList(&ed->selGrid, map, &ed->sel);
         SetStatus(&ed->status, "Pasted", GREEN);
+        MarkMapDirty(ed);
     }
 }
 
@@ -132,6 +133,7 @@ void HandleMirror(EditorState* ed, DynamicMap* map)
         ComputeSelectionBoundsMin(ed, map, minLX, minLY);
         PasteMirroredClipboard(ed, map, minLX - ed->clipboard.boundsW, minLY);
         SetStatus(&ed->status, "Mirrored to the left", { 255, 200, 0, 255 });
+        MarkMapDirty(ed);
     }
 
     if (ctrl && IsKeyPressed(KEY_RIGHT))
@@ -153,6 +155,7 @@ void HandleMirror(EditorState* ed, DynamicMap* map)
 
         PasteMirroredClipboard(ed, map, maxLX + 1, minLY);
         SetStatus(&ed->status, "Mirrored to the right", { 255, 200, 0, 255 });
+        MarkMapDirty(ed);
     }
 
     if (ctrl && IsKeyPressed(KEY_UP))
@@ -163,6 +166,7 @@ void HandleMirror(EditorState* ed, DynamicMap* map)
         ComputeSelectionBoundsMin(ed, map, minLX, minLY);
         PasteMirroredClipboard(ed, map, minLX, minLY - ed->clipboard.boundsH);
         SetStatus(&ed->status, "Mirror up", { 255, 200, 0, 255 });
+        MarkMapDirty(ed);
     }
 
     if (ctrl && IsKeyPressed(KEY_DOWN))
@@ -184,6 +188,7 @@ void HandleMirror(EditorState* ed, DynamicMap* map)
 
         PasteMirroredClipboard(ed, map, minLX, maxLY + 1);
         SetStatus(&ed->status, "Mirror down", { 255, 200, 0, 255 });
+        MarkMapDirty(ed);
     }
 }
 
@@ -208,6 +213,7 @@ void HandleRotate(EditorState* ed, DynamicMap* map)
         RotateSelectionCW(map, &ed->selGrid, &ed->sel);
         RebuildSelectionList(&ed->selGrid, map, &ed->sel);
         SetStatus(&ed->status, "Rotated selection", { 255, 200, 0, 255 });
+        MarkMapDirty(ed);
     }
 }
 
@@ -281,6 +287,7 @@ void HandleSelectTool(EditorState* ed, DynamicMap* map, Vector2 worldMouse, int 
             RebuildSelectionList(&ed->selGrid, map, &ed->sel);
             ed->pasteMode = false;
             SetStatus(&ed->status, "Pasted", GREEN);
+            MarkMapDirty(ed);
         }
 
         if (IsKeyPressed(KEY_ESCAPE))
@@ -363,6 +370,7 @@ void HandleSelectTool(EditorState* ed, DynamicMap* map, Vector2 worldMouse, int 
 
             RebuildSelectionList(&ed->selGrid, map, &ed->sel);
             ed->sel.isDragSelecting = false;
+            MarkMapDirty(ed);
         }
 
         if (ed->sel.isMoving)
@@ -371,11 +379,15 @@ void HandleSelectTool(EditorState* ed, DynamicMap* map, Vector2 worldMouse, int 
             ed->sel.isMoving = false;
             ed->sel.moveDeltaX = 0;
             ed->sel.moveDeltaY = 0;
+            MarkMapDirty(ed);
         }
     }
 
     if (IsKeyPressed(KEY_ESCAPE))
+    {
         ClearSelection(&ed->selGrid, &ed->sel);
+        MarkMapDirty(ed);
+    }
 
     if (IsKeyPressed(KEY_DELETE) || IsKeyPressed(KEY_BACKSPACE))
     {
@@ -385,6 +397,7 @@ void HandleSelectTool(EditorState* ed, DynamicMap* map, Vector2 worldMouse, int 
             map->data[ed->sel.srcX[i]][ed->sel.srcY[i]] = Cell{ 0.0f, DARKGRAY, TYPE_BLOCK, false, -1 };
 
         ClearSelection(&ed->selGrid, &ed->sel);
+        MarkMapDirty(ed);
     }
 }
 

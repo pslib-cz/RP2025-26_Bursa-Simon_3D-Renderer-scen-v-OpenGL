@@ -36,11 +36,11 @@ struct EditorState {
     bool gEdit;
     bool bEdit;
     RenderTexture2D mapRenderTex;
-    bool            mapDirty;
-    Vector2         lastCamTarget;  
-    float           lastCamZoom;   
-    int             lastOffsetX;
-    int             lastOffsetY;
+    bool mapDirty;
+    Vector2 lastCamTarget;
+    float lastCamZoom;
+    float lastOffsetX;
+    float lastOffsetY;
 };
 
 void InitEditor(EditorState* ed, DynamicMap* map);

@@ -129,7 +129,9 @@ void DrawMapCells(EditorState* ed, DynamicMap* map, int sw, int sh)
 
     bool cameraChanged = (ed->camera2D.target.x != ed->lastCamTarget.x
         || ed->camera2D.target.y != ed->lastCamTarget.y
-        || ed->camera2D.zoom != ed->lastCamZoom);
+        || ed->camera2D.zoom != ed->lastCamZoom
+        || ed->camera2D.offset.x != ed->lastOffsetX
+        || ed->camera2D.offset.y != ed->lastOffsetY);
 
     if (!ed->mapDirty && !cameraChanged)
     {
@@ -144,6 +146,8 @@ void DrawMapCells(EditorState* ed, DynamicMap* map, int sw, int sh)
 
     ed->lastCamTarget = ed->camera2D.target;
     ed->lastCamZoom = ed->camera2D.zoom;
+    ed->lastOffsetX = ed->camera2D.offset.x;
+    ed->lastOffsetY = ed->camera2D.offset.y;
     ed->mapDirty = false;
 
     BeginTextureMode(ed->mapRenderTex);
