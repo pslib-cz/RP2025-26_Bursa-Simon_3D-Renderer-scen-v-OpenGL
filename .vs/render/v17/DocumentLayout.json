@@ -1,0 +1,515 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\editor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\editor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\dialogs.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\dialogs.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\dialogs.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\dialogs.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\clipboard.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\clipboard.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\clipboard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\clipboard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\utils.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\utils.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\utils.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\utils.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\types.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\types.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\tinyfiledialogs.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\tinyfiledialogs.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\textures.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\textures.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\textures.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\textures.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\snapshot.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\snapshot.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\snapshot.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\snapshot.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\selection.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\selection.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\selection.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\selection.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\raycaster.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\raycaster.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\raycaster.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\raycaster.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\preview.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\preview.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\preview.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\preview.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\tinyfiledialogs.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\tinyfiledialogs.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\map.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\map.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\native_dialogs.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\native_dialogs.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\map.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\map.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\map.bin||{25834150-CD7E-11D0-92DF-00A0C9138C45}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\map.bin||{25834150-CD7E-11D0-92DF-00A0C9138C45}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\glad.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\glad.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\editor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|solutionrelative:render\\editor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\PROGRAM FILES (X86)\\WINDOWS KITS\\10\\INCLUDE\\10.0.26100.0\\UM\\WINUSER.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\USERS\\KKTIK\\VCPKG\\INSTALLED\\X64-WINDOWS\\INCLUDE\\RAYGUI.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3371D84C-D67A-4886-AD5D-3500B7CA2A70}|render\\render.vcxproj|C:\\PROGRAM FILES (X86)\\WINDOWS KITS\\10\\INCLUDE\\10.0.26100.0\\UM\\PRSHT.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 13,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "utils.cpp",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\utils.cpp",
+              "RelativeDocumentMoniker": "render\\utils.cpp",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\utils.cpp",
+              "RelativeToolTip": "render\\utils.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-05-15T14:47:21.846Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "tinyfiledialogs.c",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\tinyfiledialogs.c",
+              "RelativeDocumentMoniker": "render\\tinyfiledialogs.c",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\tinyfiledialogs.c",
+              "RelativeToolTip": "render\\tinyfiledialogs.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2026-05-15T14:47:18.722Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "selection.cpp",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\selection.cpp",
+              "RelativeDocumentMoniker": "render\\selection.cpp",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\selection.cpp",
+              "RelativeToolTip": "render\\selection.cpp",
+              "ViewState": "AgIAAI4AAAAAAAAAAADgvwAAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-05-10T19:11:44.544Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "types.h",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\types.h",
+              "RelativeDocumentMoniker": "render\\types.h",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\types.h",
+              "RelativeToolTip": "render\\types.h",
+              "ViewState": "AgIAADwAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T19:10:37.208Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "utils.h",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\utils.h",
+              "RelativeDocumentMoniker": "render\\utils.h",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\utils.h",
+              "RelativeToolTip": "render\\utils.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T19:10:28.229Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "raycaster.h",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\raycaster.h",
+              "RelativeDocumentMoniker": "render\\raycaster.h",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\raycaster.h",
+              "RelativeToolTip": "render\\raycaster.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T19:11:58.726Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "selection.h",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\selection.h",
+              "RelativeDocumentMoniker": "render\\selection.h",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\selection.h",
+              "RelativeToolTip": "render\\selection.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T19:11:24.109Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "snapshot.cpp",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\snapshot.cpp",
+              "RelativeDocumentMoniker": "render\\snapshot.cpp",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\snapshot.cpp",
+              "RelativeToolTip": "render\\snapshot.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-05-10T19:11:15.095Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "snapshot.h",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\snapshot.h",
+              "RelativeDocumentMoniker": "render\\snapshot.h",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\snapshot.h",
+              "RelativeToolTip": "render\\snapshot.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T19:11:08.583Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "clipboard.cpp",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\clipboard.cpp",
+              "RelativeDocumentMoniker": "render\\clipboard.cpp",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\clipboard.cpp",
+              "RelativeToolTip": "render\\clipboard.cpp",
+              "ViewState": "AgIAAFMAAACAcODAgUMlwA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-05-10T19:07:33.221Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "clipboard.h",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\clipboard.h",
+              "RelativeDocumentMoniker": "render\\clipboard.h",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\clipboard.h",
+              "RelativeToolTip": "render\\clipboard.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAABuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T19:07:57.749Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "dialogs.cpp",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\dialogs.cpp",
+              "RelativeDocumentMoniker": "render\\dialogs.cpp",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\dialogs.cpp",
+              "RelativeToolTip": "render\\dialogs.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-05-10T18:45:56.728Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "dialogs.h",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\dialogs.h",
+              "RelativeDocumentMoniker": "render\\dialogs.h",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\dialogs.h",
+              "RelativeToolTip": "render\\dialogs.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T18:45:51.503Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "editor.cpp",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\editor.cpp",
+              "RelativeDocumentMoniker": "render\\editor.cpp",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\editor.cpp",
+              "RelativeToolTip": "render\\editor.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-05-10T18:35:23.281Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "raycaster.cpp",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\raycaster.cpp",
+              "RelativeDocumentMoniker": "render\\raycaster.cpp",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\raycaster.cpp",
+              "RelativeToolTip": "render\\raycaster.cpp",
+              "ViewState": "AgIAABMAAAAAAAAAAADgvwoAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-05-10T19:06:23.958Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "preview.h",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\preview.h",
+              "RelativeDocumentMoniker": "render\\preview.h",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\preview.h",
+              "RelativeToolTip": "render\\preview.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T19:09:31.298Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "preview.cpp",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\preview.cpp",
+              "RelativeDocumentMoniker": "render\\preview.cpp",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\preview.cpp",
+              "RelativeToolTip": "render\\preview.cpp",
+              "ViewState": "AgIAAEkAAAAAAAAAAADgvxYAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-05-10T19:09:32.171Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "native_dialogs.h",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\native_dialogs.h",
+              "RelativeDocumentMoniker": "render\\native_dialogs.h",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\native_dialogs.h",
+              "RelativeToolTip": "render\\native_dialogs.h",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T19:09:28.029Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "textures.cpp",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\textures.cpp",
+              "RelativeDocumentMoniker": "render\\textures.cpp",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\textures.cpp",
+              "RelativeToolTip": "render\\textures.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-05-10T19:11:06.131Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "textures.h",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\textures.h",
+              "RelativeDocumentMoniker": "render\\textures.h",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\textures.h",
+              "RelativeToolTip": "render\\textures.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T19:10:57.418Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "tinyfiledialogs.h",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\tinyfiledialogs.h",
+              "RelativeDocumentMoniker": "render\\tinyfiledialogs.h",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\tinyfiledialogs.h",
+              "RelativeToolTip": "render\\tinyfiledialogs.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T19:10:56.058Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "map.h",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\map.h",
+              "RelativeDocumentMoniker": "render\\map.h",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\map.h",
+              "RelativeToolTip": "render\\map.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T19:08:59.321Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\main.cpp",
+              "RelativeDocumentMoniker": "render\\main.cpp",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\main.cpp",
+              "RelativeToolTip": "render\\main.cpp",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAAAoAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-05-10T18:39:58.644Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "map.cpp",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\map.cpp",
+              "RelativeDocumentMoniker": "render\\map.cpp",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\map.cpp",
+              "RelativeToolTip": "render\\map.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-05-10T18:41:27.852Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "map.bin",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\map.bin",
+              "RelativeDocumentMoniker": "render\\map.bin",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\map.bin",
+              "RelativeToolTip": "render\\map.bin",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-05-10T19:08:45.751Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "editor.h",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\editor.h",
+              "RelativeDocumentMoniker": "render\\editor.h",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\editor.h",
+              "RelativeToolTip": "render\\editor.h",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T19:08:38.883Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "glad.c",
+              "DocumentMoniker": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\glad.c",
+              "RelativeDocumentMoniker": "render\\glad.c",
+              "ToolTip": "C:\\Users\\kktik\\Desktop\\skibidi_toilet\\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\\render\\glad.c",
+              "RelativeToolTip": "render\\glad.c",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAkwBYAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2026-05-10T19:04:26.488Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "WinUser.h",
+              "DocumentMoniker": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\um\\WinUser.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\um\\WinUser.h",
+              "ToolTip": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\um\\WinUser.h",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\um\\WinUser.h",
+              "ViewState": "AgIAAIkkAAAAAAAAAAAkwJkkAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T18:57:52.402Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "raygui.h",
+              "DocumentMoniker": "C:\\Users\\kktik\\vcpkg\\installed\\x64-windows\\include\\raygui.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\vcpkg\\installed\\x64-windows\\include\\raygui.h",
+              "ToolTip": "C:\\Users\\kktik\\vcpkg\\installed\\x64-windows\\include\\raygui.h",
+              "RelativeToolTip": "..\\..\\..\\vcpkg\\installed\\x64-windows\\include\\raygui.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T18:44:31.317Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "prsht.h",
+              "DocumentMoniker": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\um\\prsht.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\um\\prsht.h",
+              "ToolTip": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\um\\prsht.h",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\um\\prsht.h",
+              "ViewState": "AgIAAOkAAAAAAAAAAAAiwP0AAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-10T18:38:01.881Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

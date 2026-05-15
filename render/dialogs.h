@@ -1,8 +1,4 @@
-#ifndef DIALOGS_H
-#define DIALOGS_H
+#pragma once
 #include <string>
-
 std::string SaveFileDialog();
 std::string OpenFileDialog();
-
-#endif

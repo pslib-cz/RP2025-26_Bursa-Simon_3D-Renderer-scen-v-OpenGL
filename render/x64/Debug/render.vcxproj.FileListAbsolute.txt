@@ -1,1 +1,2 @@
 C:\Users\simon\source\repos\render\render\x64\Debug\render.vcxproj.Up2Date
+C:\Users\kktik\Desktop\skibidi_toilet\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\x64\Debug\render.vcxproj.Up2Date

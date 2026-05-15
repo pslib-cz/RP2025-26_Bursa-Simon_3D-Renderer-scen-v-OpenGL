@@ -102,6 +102,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,7 +125,40 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="clipboard.cpp" />
+    <ClCompile Include="dialogs.cpp" />
+    <ClCompile Include="editor.cpp" />
+    <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="map.cpp" />
+    <ClCompile Include="preview.cpp" />
+    <ClCompile Include="raycaster.cpp" />
+    <ClCompile Include="selection.cpp" />
+    <ClCompile Include="snapshot.cpp" />
+    <ClCompile Include="textures.cpp" />
+    <ClCompile Include="tinyfiledialogs.c" />
+    <ClCompile Include="utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="clipboard.h" />
+    <ClInclude Include="dialogs.h" />
+    <ClInclude Include="editor.h" />
+    <ClInclude Include="glad\glad.h" />
+    <ClInclude Include="include\glad\glad.h" />
+    <ClInclude Include="map.h" />
+    <ClInclude Include="native_dialogs.h" />
+    <ClInclude Include="preview.h" />
+    <ClInclude Include="raycaster.h" />
+    <ClInclude Include="selection.h" />
+    <ClInclude Include="snapshot.h" />
+    <ClInclude Include="textures.h" />
+    <ClInclude Include="tinyfiledialogs.h" />
+    <ClInclude Include="types.h" />
+    <ClInclude Include="utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="map.bin" />
+    <None Include="map.data" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
