@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "map.h"
 #include "utils.h"
 #include <cstdlib>
@@ -6,27 +7,33 @@
 #include <cmath>
 #include <cstdint>
 
+
 DynamicMap InitDynamicMap(int w, int h) {
     DynamicMap m;
-    m.width   = w;
-    m.height  = h;
+    m.width = w;
+    m.height = h;
     m.offsetX = w / 2;
     m.offsetY = h / 2;
-    m.data    = (Cell**)malloc(w * sizeof(Cell*));
+    m.data = (Cell**)malloc(w * sizeof(Cell*));
 
     for (int i = 0; i < w; i++) {
         m.data[i] = (Cell*)malloc(h * sizeof(Cell));
-        for (int j = 0; j < h; j++)
+        for (int j = 0; j < h; j++) {
             m.data[i][j] = Cell{ 0.0f, DARKGRAY, TYPE_BLOCK, false, -1 };
+        }
     }
     return m;
 }
 
 void FreeDynamicMap(DynamicMap* m) {
-    for (int i = 0; i < m->width; i++) free(m->data[i]);
+    for (int i = 0; i < m->width; i++) {
+        free(m->data[i]);
+    };
+
     free(m->data);
-    m->data   = nullptr;
-    m->width  = 0;
+
+    m->data = nullptr;
+    m->width = 0;
     m->height = 0;
 }
 

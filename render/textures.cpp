@@ -1,5 +1,7 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "textures.h"
 #include <cstring>
+
 
 LoadedTexture gTextures[MAX_TEXTURES] = {};
 int           gTextureCount           = 0;

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "types.h"
 #include "snapshot.h"
 #include "selection.h"
@@ -35,6 +35,12 @@ struct EditorState {
     bool rEdit;
     bool gEdit;
     bool bEdit;
+    RenderTexture2D mapRenderTex;
+    bool            mapDirty;
+    Vector2         lastCamTarget;  
+    float           lastCamZoom;   
+    int             lastOffsetX;
+    int             lastOffsetY;
 };
 
 void InitEditor(EditorState* ed, DynamicMap* map);

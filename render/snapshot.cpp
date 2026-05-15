@@ -1,4 +1,4 @@
-#include "snapshot.h"
+﻿#include "snapshot.h"
 #include <cstdlib>
 #include <cstring>
 
@@ -62,15 +62,13 @@ void PushUndo(UndoStack* us, const DynamicMap* m) {
     for (int i = us->current + 1; i < us->count; i++)
         FreeSnapshot(&us->history[i]);
     us->count = us->current + 1;
-
     if (us->count >= UNDO_MAX) {
         FreeSnapshot(&us->history[0]);
         memmove(&us->history[0], &us->history[1],
-                (UNDO_MAX - 1) * sizeof(MapSnapshot));
+            (UNDO_MAX - 1) * sizeof(MapSnapshot));
         us->count--;
         us->current--;
     }
-
     us->history[us->count] = SnapshotMap(m);
     us->current = us->count;
     us->count++;

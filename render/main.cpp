@@ -16,8 +16,9 @@
 
 int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI | FLAG_WINDOW_ALWAYS_RUN);
-    InitWindow(1200, 800, "Raycaster Demo");
+    InitWindow(1200, 800, "Map Editor");
     SetWindowMinSize(800, 600);
+    SetTargetFPS(240);
 
     GameScene currentScene = SCENE_WHITE;
 

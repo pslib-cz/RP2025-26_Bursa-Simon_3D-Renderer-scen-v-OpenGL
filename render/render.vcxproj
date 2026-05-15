@@ -106,8 +106,9 @@
       <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -118,6 +119,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)include
+; $(SolutionDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,6 +131,8 @@
     <ClCompile Include="clipboard.cpp" />
     <ClCompile Include="dialogs.cpp" />
     <ClCompile Include="editor.cpp" />
+    <ClCompile Include="editor_draw.cpp" />
+    <ClCompile Include="editor_input.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="map.cpp" />
@@ -143,6 +148,8 @@
     <ClInclude Include="clipboard.h" />
     <ClInclude Include="dialogs.h" />
     <ClInclude Include="editor.h" />
+    <ClInclude Include="editor_draw.h" />
+    <ClInclude Include="editor_input.h" />
     <ClInclude Include="glad\glad.h" />
     <ClInclude Include="include\glad\glad.h" />
     <ClInclude Include="map.h" />

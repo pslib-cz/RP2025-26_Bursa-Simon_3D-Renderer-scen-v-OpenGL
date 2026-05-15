@@ -1,8 +1,11 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "utils.h"
 #include "raylib.h"
 #include <cstring>
 #include <cstdio>
 #include <cstdint>
+
+
 
 bool IsCellDefault(const Cell* c) {
     return c->height       == 0.0f

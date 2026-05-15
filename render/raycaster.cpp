@@ -226,7 +226,7 @@ GameScene UpdateDrawRaycaster(RaycasterState* rc, DynamicMap* map) {
         GuiColorPicker({ 18, 30, 155, 155 }, NULL, &rc->skyColor);
         if (GuiButton({ 18, 190, 80, 16 }, "Close")) rc->showSkyColorPicker = false;
     }
-    DrawFPS(sw - 80, sh - 35);
+    //DrawFPS(sw - 80, sh - 35);
     EndDrawing();
 
     return nextScene;
