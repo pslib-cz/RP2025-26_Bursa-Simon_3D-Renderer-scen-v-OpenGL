@@ -1,3 +1,58 @@
-﻿  render.vcxproj -> C:\Users\kktik\Desktop\skibidi_toilet\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\x64\Debug\render.exe
+﻿  clipboard.cpp
+  dialogs.cpp
+  editor.cpp
+  editor_draw.cpp
+C:\Users\kktik\vcpkg\installed\x64-windows\include\raygui.h(2656,46): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'editor_draw.cpp')
+  
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(690,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(690,23): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(703,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(703,16): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(704,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(704,16): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(705,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(705,16): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(783,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(783,30): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(849,27): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(849,17): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(854,50): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(854,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(860,46): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(860,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(875,46): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(875,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(882,47): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(882,37): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(885,31): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(885,21): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(902,46): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(902,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(912,43): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(912,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(920,70): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(920,60): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(924,50): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(924,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(948,45): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(948,35): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(952,27): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\render\editor_draw.cpp(952,17): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  editor_input.cpp
+  main.cpp
+  map.cpp
+  preview.cpp
+  raycaster.cpp
+  selection.cpp
+  snapshot.cpp
+  textures.cpp
+  utils.cpp
+  Generating Code...
+  glad.c
+  tinyfiledialogs.c
+  Generating Code...
+  LINK : C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\x64\Debug\render.exe not found or not built by the last incremental link; performing full link
+  render.vcxproj -> C:\Users\kktik\Desktop\New folder (3)\RP2025-26_Bursa-Simon_3D-Renderer-scen-v-OpenGL\x64\Debug\render.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
