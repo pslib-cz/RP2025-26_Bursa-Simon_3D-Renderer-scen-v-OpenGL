@@ -444,6 +444,7 @@ void DrawSidebar(EditorState* ed, DynamicMap* map, Vector2 mousePos, int sh, int
         {
             ClearSelection(&ed->selGrid, &ed->sel);
             ed->shapeFirstClick = false;
+            MarkMapDirty(ed);
         }
     }
 
@@ -464,6 +465,7 @@ void DrawSidebar(EditorState* ed, DynamicMap* map, Vector2 mousePos, int sh, int
         {
             ClearSelection(&ed->selGrid, &ed->sel);
             ed->shapeFirstClick = false;
+            MarkMapDirty(ed);
         }
     }
 
@@ -477,6 +479,7 @@ void DrawSidebar(EditorState* ed, DynamicMap* map, Vector2 mousePos, int sh, int
         {
             ClearSelection(&ed->selGrid, &ed->sel);
             ed->pasteMode = false;
+            MarkMapDirty(ed);
         }
 
         ed->shapeFirstClick = false;
@@ -493,6 +496,7 @@ void DrawSidebar(EditorState* ed, DynamicMap* map, Vector2 mousePos, int sh, int
             ClearSelection(&ed->selGrid, &ed->sel);
             ed->shapeFirstClick = false;
             ClearPreview();
+            MarkMapDirty(ed);
         }
     }
 
@@ -507,6 +511,7 @@ void DrawSidebar(EditorState* ed, DynamicMap* map, Vector2 mousePos, int sh, int
             ClearSelection(&ed->selGrid, &ed->sel);
             ed->shapeFirstClick = false;
             ClearPreview();
+            MarkMapDirty(ed);
         }
     }
 
@@ -521,6 +526,7 @@ void DrawSidebar(EditorState* ed, DynamicMap* map, Vector2 mousePos, int sh, int
             ClearSelection(&ed->selGrid, &ed->sel);
             ed->shapeFirstClick = false;
             ClearPreview();
+            MarkMapDirty(ed);
         }
     }
 

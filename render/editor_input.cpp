@@ -30,6 +30,7 @@ static void SwitchTool(EditorState* ed, ToolMode next)
         ClearSelection(&ed->selGrid, &ed->sel);
         ed->shapeFirstClick = false;
         ClearPreview();
+        MarkMapDirty(ed);
     }
 }
 
@@ -244,6 +245,7 @@ void HandleToolKeys(EditorState* ed)
         {
             ClearSelection(&ed->selGrid, &ed->sel);
             ed->pasteMode = false;
+            MarkMapDirty(ed);
         }
 
         ed->shapeFirstClick = false;
@@ -317,7 +319,10 @@ void HandleSelectTool(EditorState* ed, DynamicMap* map, Vector2 worldMouse, int 
             bool shift = IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT);
 
             if (!shift)
+            {
                 ClearSelection(&ed->selGrid, &ed->sel);
+                MarkMapDirty(ed);
+            }
 
             ed->sel.isDragSelecting = true;
             ed->sel.dragStart = worldMouse;
@@ -435,6 +440,7 @@ void HandleShapeTools(EditorState* ed, DynamicMap* map, int logicX, int logicY)
             PushUndo(&ed->undoStack, map);
             Cell c = { 2.5f, ed->brushColor, TYPE_BLOCK, ed->brushSolid, -1 };
             CommitPreview(map, c);
+            MarkMapDirty(ed);
 
             if (ed->toolMode == TOOL_LINE)
             {
@@ -493,7 +499,7 @@ void HandleCanvasTools(EditorState* ed, DynamicMap* map, bool mouseOnUI, int log
             if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
             {
                 map->data[ax][ay] = Cell{ 0.0f, DARKGRAY, TYPE_BLOCK, false, -1 };
-                DrawMapCellAt(ed, map, logicX, logicY);
+                MarkMapDirty(ed);
             }
         }
         else if (ed->toolMode == TOOL_BRUSH)
@@ -509,7 +515,7 @@ void HandleCanvasTools(EditorState* ed, DynamicMap* map, bool mouseOnUI, int log
                 map->data[ax][ay].height = 2.5f;
                 map->data[ax][ay].color = ed->brushColor;
                 map->data[ax][ay].solid = ed->brushSolid;
-                DrawMapCellAt(ed, map, logicX, logicY);
+                MarkMapDirty(ed);
             }
 
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
